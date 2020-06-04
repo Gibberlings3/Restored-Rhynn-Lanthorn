@@ -1,0 +1,12 @@
+id				global					check													neg_check											script_increment_lensplot		sage_strref		journal_strref		vanilla
+troll_mound		PlayerToldOfTrollMound	Dead("TROLLENS")										*													ar1904							@4				#57946				1
+unseeing_eye	PlayerToldOfUnseeingEye	Dead("UnseeingEye")										*													ar0202							@5				#57948				1
+torgal			PlayerToldOfTorgal		Dead("TORGAL")											*													ar1301							@6				#57949				1
+samia			PlayerToldOfSamia		Dead("SAMIA")											*													ar1202							@7				#57950				1	
+maevar			PlayerToldOfMaeVar		Dead("MAEVAR")											*													ar0301							@8				#57951				1
+mekrath			PlayerToldOfMekrath		OR(2)Dead("MEKRATH")Global("MekrathLeft","GLOBAL",1)	!Dead("MEKRATH")!Global("MekrathLeft","GLOBAL",1)	ar0705							@9				#57952				1	
+shade_lord		PlayerToldOfShadeLord	Dead("SHADEL")											*													ar1404							@10				#57954				1	
+kangaxx			dw_PlayerToldOfKangaxx  Dead("hldemi")											*													ar0331							@35				@135				0				
+layene			dw_PlayerToldOfLayene	Dead("hllayen")											*													ar1008							@36				@136				0
+koshi			dw_PlayerToldOfKoshi	Dead("hlkoshi")											*													ar0907							@37				@137				0
+alhoon			dw_PlayerToldOfAlhoon	Dead("%dv_alhoon%")										*													ar0711							@38				@138				0

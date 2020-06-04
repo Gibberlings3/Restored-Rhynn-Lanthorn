@@ -1,0 +1,9 @@
+IF
+	Global("dw_placed_lens","MYAREA",0)
+	Global("%global%","GLOBAL",1)
+THEN
+	RESPONSE #100
+		SetGlobal("dw_placed_lens","MYAREA",1)
+		GiveItemCreate("c6lens","hlkoshi",1,0,0)
+		Continue()
+END

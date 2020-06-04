@@ -1,0 +1,1332 @@
+///////////////////////////////////////////////////////////////
+/// Fragments of DavidW's SFO function library, or tweaked bits
+/// of it with reduced dependence
+///
+///////////////////////////////////////////////////////////////
+
+ACTION_IF !VARIABLE_IS_SET installed_SFO BEGIN
+
+OUTER_SET installed_SFO=1
+
+////// Blank file
+
+<<<<<<<< .../stratagems-inline/blank
+>>>>>>>>
+
+///// Initial definitions
+
+OUTER_SPRINT external_loc weidu_external
+MKDIR "%external_loc%"
+OUTER_SPRINT workspace "%external_loc%/workspace"
+MKDIR "%workspace%"
+OUTER_SPRINT marker_loc "%external_loc%/markers"
+MKDIR "%marker_loc%"
+OUTER_SPRINT data_loc "%external_loc%/data/ascension"
+MKDIR "%data_loc%"
+
+OUTER_SPRINT percentage "%"
+
+OUTER_SPRINT scsroot "%MOD_FOLDER%"
+
+ACTION_IF GAME_IS "bg2ee eet" BEGIN
+   OUTER_SET enhanced_edition=1
+END ELSE BEGIN
+   OUTER_SET enhanced_edition=0
+END
+
+OUTER_SPRINT ext_lang_loc "%external_loc%/lang/%scsroot%"
+
+ACTION_IF FILE_EXISTS "%MOD_FOLDER%/lib/build_patches.tpa" BEGIN
+INCLUDE "%MOD_FOLDER%/lib/build_patches.tpa"
+ACTION_IF !FILE_EXISTS "%MOD_FOLDER%/lib/cre_patch.tpa" BEGIN // in live use, this shouldn't need to run
+   LAF build_cre_patch END
+END
+ACTION_IF !FILE_EXISTS "%MOD_FOLDER%/lib/spl_patch.tpa" BEGIN // in live use, this shouldn't need to run
+   LAF build_spl_patch END
+END
+INCLUDE "%MOD_FOLDER%/lib/cre_patch.tpa"
+INCLUDE "%MOD_FOLDER%/lib/spl_patch.tpa"
+END
+
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
+
+END // end of outer loop
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+///     Function definitions from here on
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////    immutable version of HANDLE_CHARSETS
+////////////
+////////////    Assumes "scsroot" has been set to your mod directory, and "workspace" to your working
+////////////    directory
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_FUNCTION handle_charsets_immutably
+       INT_VAR force_tra_rebuild=0
+       STR_VAR tra_base=lang
+               base_language=english
+               iconv_path=""
+       RET     scs_tra_loc
+BEGIN
+   // guess scsroot and workspace if not set
+   // do conversions (ee only)
+   ACTION_IF enhanced_edition BEGIN
+       OUTER_INNER_PATCH_SAVE versionstring "%MOD_VERSION%" BEGIN
+          REPLACE_TEXTUALLY " " ""
+       END
+       OUTER_SPRINT scs_tra_loc "%ext_lang_loc%"
+       OUTER_SPRINT marker_name "%marker_loc%/dw#%scsroot%_%versionstring%_languages_installed.mrk"
+       ACTION_IF (!FILE_EXISTS "%marker_name%"  || force_tra_rebuild) BEGIN
+          COPY ".../stratagems-inline/blank" "%marker_name%"
+          MKDIR "%scs_tra_loc%/%LANGUAGE%"
+          ACTION_BASH_FOR "%scsroot%/%tra_base%/%LANGUAGE%" ".*\.tra" BEGIN
+             COPY "%BASH_FOR_FILESPEC%" "%scs_tra_loc%/%LANGUAGE%"
+          END
+          ACTION_MATCH "%LANGUAGE%" WITH
+          "%base_language%" BEGIN END
+          DEFAULT
+            MKDIR "%scs_tra_loc%/%base_language%"
+            ACTION_BASH_FOR "%scsroot%/%tra_base%/%base_language%" ".*\.tra" BEGIN
+                COPY "%BASH_FOR_FILESPEC%" "%scs_tra_loc%/%base_language%"
+            END
+          END
+          // guess iconv path if not given
+          ACTION_IF "%iconv_path%" STRING_EQUAL_CASE "" BEGIN
+             OUTER_SPRINT iconv_path "%scsroot%/%tra_base%/iconv"
+          END
+          LAF HANDLE_CHARSETS INT_VAR infer_charsets = 1 STR_VAR iconv_path  tra_path = ~%scs_tra_loc%~  END
+       END
+   END ELSE BEGIN
+      // on non-EE, just set the tra loc
+      OUTER_SPRINT scs_tra_loc "%scsroot%/%tra_base%"
+   END
+END
+
+/////////////////////////////////////////////////////
+/// Regeneration (because this is a largish change,
+/// even though it's a fix, there is an INI override)
+/////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION
+      CRE_regeneration
+      INT_VAR arguments=0
+              type=2
+BEGIN
+  LPF DELETE_EFFECT INT_VAR match_opcode=98 END // tidy up by removing any residual effect
+  PATCH_IF arguments>0 BEGIN
+    LPF check_ini STR_VAR ini=skip_regeneration_fix RET value END
+    PATCH_IF !value BEGIN
+    // if type isn't 2, we just patch it in
+     PATCH_IF !(type=2) BEGIN
+       LPF ADD_CRE_EFFECT INT_VAR opcode=98 target=2 timing=1 duration=999999 parameter1=arguments parameter2=type END
+     END ELSE BEGIN
+       LPF check_ini STR_VAR ini=regeneration_difficulty_minimum RET minimum=value END
+       PATCH_IF minimum<=1 BEGIN // if it's always required, just patch the CRE file
+          LPF ADD_CRE_EFFECT INT_VAR opcode=98 target=2 timing=1 duration=999999 parameter1=arguments parameter2=2 END
+       END ELSE BEGIN
+          // work out the name of the spell and script associated with this level of regeneration
+          PATCH_IF arguments<10 BEGIN
+             SPRINT resource "finrg0%arguments%"
+          END ELSE BEGIN
+             SPRINT resource "finrg%arguments%"
+          END
+          // make the resources if they don't exist already
+          PATCH_IF !FILE_EXISTS_IN_GAME "%resource%.bcs" BEGIN
+             INNER_ACTION BEGIN
+              LAF regeneration_resource_builder INT_VAR rate=arguments minimum STR_VAR resource END
+             END
+          END
+          // patch in the script
+          LPF insert_script STR_VAR script="%resource%" END
+       END
+     END
+    END
+  END
+END
+
+/////////////////////////////////////////////////////
+/// Helper function: builds script and spell
+/////////////////////////////////////////////////////
+
+DEFINE_ACTION_FUNCTION regeneration_resource_builder
+   INT_VAR rate=0
+           minimum=0
+   STR_VAR resource=""
+BEGIN
+   // resolve the new sectype
+   LAF add_silent_sectype STR_VAR sectype=regeneration RET sectype_value END
+   // make the original deleter if needed
+   ACTION_IF !FILE_EXISTS_IN_GAME "finrg00.spl" BEGIN
+      LAF create_basic_spell STR_VAR spell=finrg00 END
+      COPY_EXISTING finrg00.spl override
+           LPF ADD_SPELL_EFFECT INT_VAR opcode=221 target=1 timing=1 parameter1=10 parameter2=sectype_value END
+      BUT_ONLY
+   END
+   // make the item that applies the regeneration opcode
+   COPY_EXISTING "finrg00.spl" "override/%resource%.spl"
+        WRITE_BYTE 0x27 sectype_value
+        LPF ADD_SPELL_EFFECT INT_VAR opcode=98 target=1 timing=0 duration=999999 parameter1=rate parameter2=2 END
+   BUT_ONLY
+   // make the script
+<<<<<<<< .../ascension-inline/regen_base.baf
+IF
+  DifficultyLT(%minimum%)
+  Global("regeneration_on","LOCALS",1)
+THEN
+    RESPONSE #100
+             SetGlobal("regeneration_off","LOCALS",0)
+             ApplySpellRES("finrg00",Myself)
+             Continue()
+END
+
+IF
+  !DifficultyLT(%minimum%)
+  Global("regeneration_on","LOCALS",0)
+THEN
+    RESPONSE #100
+             SetGlobal("regeneration_off","LOCALS",1)
+             ApplySpellRES("%resource%",Myself)
+             Continue()
+END
+>>>>>>>>
+    COPY ".../ascension-inline/regen_base.baf" "override/%resource%.bcs" EVALUATE_BUFFER  COMPILE_BAF_TO_BCS
+
+END
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// immunity to an opcode (simplified reduce-dependency version)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION immunity_to_opcode
+     INT_VAR value=1 // set to 0 to remove
+     STR_VAR arguments=""
+BEGIN
+   READ_ASCII 0x0 SOURCE_EXT (3) // it doesn't robustly get kept
+   PATCH_IF "%arguments%" STRING_COMPARE_CASE "" BEGIN
+      LPF return_first_entry STR_VAR list="%arguments%" RET entry arguments=list END
+      LPF DELETE_EFFECT INT_VAR match_opcode=101 match_parameter2=entry END
+      PATCH_IF value BEGIN
+         PATCH_IF "%SOURCE_EXT%" STRING_EQUAL_CASE "itm" BEGIN
+            LPF ADD_ITEM_EQEFFECT INT_VAR target=1 timing=2 opcode=101 parameter2=entry END
+         END ELSE BEGIN
+            LPF ADD_CRE_EFFECT INT_VAR target=1 timing=9 opcode=101 parameter2=entry END
+         END
+      END
+      LPF immunity_to_opcode INT_VAR value STR_VAR arguments END
+   END
+END
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// immunity to an icon (simplified reduce-dependency version)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION immunity_to_icon
+     INT_VAR value=1 // set to 0 to remove
+     STR_VAR arguments=""
+BEGIN
+   READ_ASCII 0x0 SOURCE_EXT (3) // it doesn't robustly get kept
+   PATCH_IF "%arguments%" STRING_COMPARE_CASE "" BEGIN
+      LPF return_first_entry STR_VAR list="%arguments%" RET entry arguments=list END
+      LPF DELETE_EFFECT INT_VAR match_opcode=169 match_parameter2=entry END
+      PATCH_IF value BEGIN
+         PATCH_IF "%SOURCE_EXT%" STRING_EQUAL_CASE "itm" BEGIN
+            LPF ADD_ITEM_EQEFFECT INT_VAR target=1 timing=2 opcode=169 parameter2=entry END
+         END ELSE BEGIN
+            LPF ADD_CRE_EFFECT INT_VAR target=1 timing=9 opcode=169 parameter2=entry END
+         END
+      END
+      LPF immunity_to_icon INT_VAR value STR_VAR arguments END
+   END
+END
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// remove an icon (simplified reduce-dependency version)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION remove_icon
+     INT_VAR value=1 // set to 0 to remove
+     STR_VAR arguments=""
+BEGIN
+   READ_ASCII 0x0 SOURCE_EXT (3) // it doesn't robustly get kept
+   PATCH_IF "%SOURCE_EXT%" STRING_EQUAL_CASE ITM BEGIN // otherwise skip
+    PATCH_IF "%arguments%" STRING_COMPARE_CASE "" BEGIN
+      LPF return_first_entry STR_VAR list="%arguments%" RET entry arguments=list END
+      LPF DELETE_EFFECT INT_VAR match_opcode=240 match_parameter2=entry END
+      PATCH_IF value BEGIN
+         LPF ADD_ITEM_EQEFFECT INT_VAR target=1 timing=2 opcode=240 parameter2=entry END
+      END
+      LPF remove_icon INT_VAR value STR_VAR arguments END
+    END
+   END
+END
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// immunity to a displayed string (simplified reduce-dependency version)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION immunity_to_string
+     INT_VAR value=1 // set to 0 to remove
+     STR_VAR arguments=""
+BEGIN
+   READ_ASCII 0x0 SOURCE_EXT (3) // it doesn't robustly get kept
+   PATCH_IF "%arguments%" STRING_COMPARE_CASE "" BEGIN
+      LPF return_first_entry STR_VAR list="%arguments%" RET entry arguments=list END
+      LPF DELETE_EFFECT INT_VAR match_opcode=267 match_parameter1=entry END
+      PATCH_IF value BEGIN
+         PATCH_IF "%SOURCE_EXT%" STRING_EQUAL_CASE "itm" BEGIN
+            LPF ADD_ITEM_EQEFFECT INT_VAR target=1 timing=2 opcode=267 parameter1=entry END
+         END ELSE BEGIN
+            LPF ADD_CRE_EFFECT INT_VAR target=1 timing=9 opcode=267 parameter1=entry END
+         END
+      END
+      LPF immunity_to_string INT_VAR value STR_VAR arguments END
+   END
+END
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// immunity to a spell (simplified reduce-dependency version)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION immunity_to_spell
+     INT_VAR value=1 // set to 0 to remove
+     STR_VAR arguments=""
+BEGIN
+   READ_ASCII 0x0 SOURCE_EXT (3) // it doesn't robustly get kept
+   PATCH_IF "%arguments%" STRING_COMPARE_CASE "" BEGIN
+      LPF return_first_entry STR_VAR list="%arguments%" RET resource=entry arguments=list END
+      LPF DELETE_EFFECT INT_VAR match_opcode=206 STR_VAR match_resource="%resource%" END
+      PATCH_IF value BEGIN
+         PATCH_IF "%SOURCE_EXT%" STRING_EQUAL_CASE "itm" BEGIN
+            LPF ADD_ITEM_EQEFFECT INT_VAR target=1 timing=2 opcode=206 STR_VAR resource END
+         END ELSE BEGIN
+          LPF ADD_CRE_EFFECT INT_VAR target=1 timing=9 opcode=206 STR_VAR resource END
+         END
+      END
+      LPF immunity_to_spell INT_VAR value STR_VAR arguments END
+   END
+END
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// immunity to an animation (simplified reduce-dependency version)
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION immunity_to_animation
+     INT_VAR value=1 // set to 0 to remove
+     STR_VAR arguments=""
+BEGIN
+   READ_ASCII 0x0 SOURCE_EXT (3) // it doesn't robustly get kept
+   PATCH_IF "%arguments%" STRING_COMPARE_CASE "" BEGIN
+      LPF return_first_entry STR_VAR list="%arguments%" RET resource=entry arguments=list END
+      LPF DELETE_EFFECT INT_VAR match_opcode=296 STR_VAR match_resource="%resource%" END
+      PATCH_IF value BEGIN
+         PATCH_IF "%SOURCE_EXT%" STRING_EQUAL_CASE "itm" BEGIN
+            LPF ADD_ITEM_EQEFFECT INT_VAR target=1 timing=2 opcode=296 STR_VAR resource END
+         END ELSE BEGIN
+          LPF ADD_CRE_EFFECT INT_VAR target=1 timing=9 opcode=296 STR_VAR resource END
+         END
+      END
+      LPF immunity_to_animation INT_VAR value STR_VAR arguments END
+   END
+END
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// faster add spells (simplified reduce-dependency version)
+///
+/// Format: list of spells, either as resref (SPWI412), or ids entry (WIZARD_FIREBALL) or abbreviated ids entry (leave off the
+/// WIZARD_ or CLERIC_; ambiguities resolved as WIZARD). If you enter it as spell(n) then n copies are added.
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION CRE_add_spells
+    STR_VAR arguments=""
+BEGIN
+    PATCH_IF "%arguments%" STRING_COMPARE_CASE "" BEGIN
+       LPF return_first_entry STR_VAR list="%arguments%" RET entry list END
+       // get number to add
+       SET number=1
+       INNER_PATCH_SAVE entry "%entry%" BEGIN
+          REPLACE_EVALUATE "^\(.*\)(\([0-9]+\))$" BEGIN
+             SET number="%MATCH2%"
+          END
+          "%MATCH1%"
+       END
+       // get resref
+       PATCH_IF IDS_OF_SYMBOL (spell "%entry%")>=0 BEGIN
+             LPF RES_NUM_OF_SPELL_NAME STR_VAR spell_name="%entry%" RET spell_res END
+       END ELSE
+       PATCH_IF IDS_OF_SYMBOL (spell "WIZARD_%entry%")>=0 BEGIN
+             LPF RES_NUM_OF_SPELL_NAME STR_VAR spell_name="WIZARD_%entry%" RET spell_res END
+             PATCH_IF IDS_OF_SYMBOL (spell "CLERIC_%entry%")>=0 BEGIN
+                  LPF warning STR_VAR warning="Spell %entry% is ambiguous between CLERIC_%entry% and WIZARD_%entry%; defaulting to WIZARD" END
+             END
+       END ELSE
+       PATCH_IF IDS_OF_SYMBOL (spell "CLERIC_%entry%")>=0 BEGIN
+             LPF RES_NUM_OF_SPELL_NAME STR_VAR spell_name="CLERIC_%entry%" RET spell_res END
+       END ELSE BEGIN
+             SPRINT spell_res "%entry%"
+       END
+       PATCH_IF !FILE_EXISTS_IN_GAME "%spell_res%.spl" BEGIN  
+          LPF warning STR_VAR warning="Trying to add spell %spell_res% to %SOURCE_RES% but it doesn't exist" END
+       END
+       // add spell
+       PATCH_MATCH "%spell_res%" WITH
+       "SPPR1.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #0 priest (number)
+       END
+       "SPPR2.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #1 priest (number)
+       END
+       "SPPR3.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #2 priest (number)
+       END
+       "SPPR4.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #3 priest (number)
+       END
+       "SPPR5.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #4 priest (number)
+       END
+       "SPPR6.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #5 priest (number)
+       END
+       "SPPR7.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #6 priest (number)
+       END
+       "SPWI1.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #0 wizard (number)
+       END
+       "SPWI2.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #1 wizard (number)
+       END
+       "SPWI3.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #2 wizard (number)
+       END
+       "SPWI4.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #3 wizard (number)
+       END
+       "SPWI5.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #4 wizard (number)
+       END
+       "SPWI6.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #5 wizard (number)
+       END
+       "SPWI7.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #6 wizard (number)
+       END
+       "SPWI8.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #7 wizard (number)
+       END
+       "SPWI9.*" BEGIN
+          ADD_MEMORIZED_SPELL "%spell_res%" #8 wizard (number)
+       END
+       DEFAULT
+          ADD_MEMORIZED_SPELL "%spell_res%" #0 innate (number)
+       END
+       // recurse
+       LPF CRE_add_spells STR_VAR arguments="%list%" END
+    END
+END
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+///      make an item description string according to whether EE is installed
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION item_useability_string
+   INT_VAR tra_ref=0
+   RET desc
+BEGIN
+   SPRINT desc ( AT "%tra_ref%")
+   PATCH_IF enhanced_edition BEGIN
+       PATCH_IF VARIABLE_IS_SET SFO_unusable_string_tra_ref BEGIN
+          SPRINT unusable ( AT "%SFO_unusable_string_tra_ref%")
+          INNER_PATCH "%desc%" BEGIN
+            SET ind=INDEX_BUFFER (CASE_INSENSITIVE "%unusable%")
+            PATCH_IF ind>=0 BEGIN
+               READ_ASCII 0x0 desc (ind)
+            END
+          END
+       END
+       PATCH_IF VARIABLE_IS_SET SFO_usable_string_tra_ref BEGIN
+          SPRINT usable ( AT "%SFO_usable_string_tra_ref%")
+          INNER_PATCH "%desc%" BEGIN
+            SET ind=INDEX_BUFFER (CASE_INSENSITIVE "%usable%")
+            PATCH_IF ind>=0 BEGIN
+               READ_ASCII 0x0 desc (ind)
+            END
+          END
+       END
+   END
+END
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////            as a patch or action, take a list of variables, return the first entry, and strip it from the list
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION return_first_entry
+     STR_VAR list=""
+     RET     entry
+             list
+BEGIN
+   SPRINT entry "%list%" // default if there's only one
+   SET multiple_entries=0
+   PATCH_IF INDEX ("~" "%list%")=0 BEGIN // first character ~
+       INNER_PATCH_SAVE list "%list%" BEGIN
+          REPLACE_EVALUATE "^~\([^~]\) +\([^ ].*$\)" BEGIN
+             SPRINT entry "%MATCH1%"
+             SET multiple_entries=1
+          END
+          "%MATCH2%"
+       END
+   END ELSE
+   PATCH_IF INDEX (~"~ "%list%")=0 BEGIN // first character ""
+       INNER_PATCH_SAVE list "%list%" BEGIN
+          REPLACE_EVALUATE ~^"\([^"]*\)" +\([^ ].*$\)~ BEGIN
+             SPRINT entry "%MATCH1%"
+             SET multiple_entries=1
+          END
+          "%MATCH2%"
+       END
+   END ELSE BEGIN
+       INNER_PATCH_SAVE list "%list%" BEGIN
+          REPLACE_EVALUATE " *\([^ ]+\) +\([^ ].*\)$" BEGIN
+             SPRINT entry "%MATCH1%"
+             SET multiple_entries=1
+          END
+          "%MATCH2%"
+       END
+   END
+   INNER_PATCH_SAVE entry "%entry%" BEGIN
+      REPLACE_EVALUATE "^ *\([^ ].*\)$" BEGIN END "%MATCH1%"
+      REPLACE_EVALUATE "^\(.*[^ ]\) *$" BEGIN END "%MATCH1%"
+   END
+   PATCH_IF !multiple_entries BEGIN
+      SPRINT list ""
+   END
+END
+
+
+DEFINE_ACTION_FUNCTION return_first_entry 
+   STR_VAR list=""
+           separator=""
+   RET entry list
+BEGIN
+   OUTER_INNER_PATCH "" BEGIN
+      LPF return_first_entry STR_VAR list separator RET entry list END
+   END
+END
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////           create a legal spell with 1 header
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_FUNCTION create_basic_spell
+   STR_VAR spell=""
+BEGIN
+      CREATE spl "%spell%"
+      INSERT_BYTES 0x72 0x28 // new header
+      WRITE_SHORT 0x68 1 // record header numbers
+      WRITE_LONG 0x6a (0x72 + 0x28)
+      LPF ALTER_SPELL_HEADER  // tbh here I'm just following what's generally done in vanilla resources
+            INT_VAR new_header_type=1
+                    location=4
+                    target=1
+                    min_level=1
+                    damage_type=1
+                    charges=1
+      END
+
+END
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////  Sort out a SPLPROT entry
+/////
+/////  through stupid design choices, this uses 'value' both as input and output. Too many uses to change now.
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_FUNCTION resolve_splprot_entry 
+      INT_VAR stat=0
+              value=0
+              relation_number=0
+      STR_VAR relation=""
+      RET value
+BEGIN
+      OUTER_SET splprot_value=value
+      ACTION_MATCH "%relation%" WITH
+         equals equal BEGIN 
+            OUTER_SET relation_number=1
+         END
+         greater greater_than BEGIN
+            OUTER_SET relation_number=3
+         END
+         less less_than BEGIN
+            OUTER_SET relation_number=2
+         END
+         greater_equal greater_equals BEGIN
+            OUTER_SET relation_number= 4
+         END
+         less_than_equal less_equal less_than_equals less_than_equals BEGIN
+            OUTER_SET relation_number=0
+         END
+         not_equal BEGIN
+            OUTER_SET relation_number=5
+         END
+         "" BEGIN END
+      DEFAULT
+         LAF warning STR_VAR warning="unrecognised relation %relation% in resolve_splprot_entry; defaulting to 0" END
+         OUTER_SET relation_number=0
+      END
+      COPY_EXISTING "splprot.2da" override
+            READ_2DA_ENTRIES_NOW splprot_array 4
+            SET value="-1"
+            FOR (i=0;i<splprot_array;i+=1) BEGIN
+                   READ_2DA_ENTRY_FORMER splprot_array i 1 this_stat
+                   READ_2DA_ENTRY_FORMER splprot_array i 2 this_value
+                   READ_2DA_ENTRY_FORMER splprot_array i 3 this_relation
+                   PATCH_IF (IS_AN_INT this_stat && IS_AN_INT this_value && IS_AN_INT this_relation) BEGIN
+                     PATCH_IF (stat=this_stat && splprot_value=this_value && relation_number=this_relation) BEGIN
+                      SET value=i
+                      SET i=splprot_array
+                     END
+                   END
+            END
+            PATCH_IF value<0 BEGIN
+               INSERT_2DA_ROW splprot_array 4 "%splprot_array% %stat% %splprot_value% %relation_number%"
+               SET value=splprot_array
+            END
+      BUT_ONLY
+END
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////            take all powers of an item header, externalise them to a new spell, and change the item to cast the spell
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION externalise_ability_to_spell
+     INT_VAR header=0
+             debug=0
+     STR_VAR spell=""
+BEGIN
+  // get the ability data
+  SPRINT data ""
+  SET count=0
+  GET_OFFSET_ARRAY ab_arr ITM_V10_HEADERS
+  PHP_EACH ab_arr AS ab_ind=>ab_off BEGIN
+     PATCH_IF ab_ind=header BEGIN
+          GET_OFFSET_ARRAY2 fx_arr ab_off ITM_V10_HEAD_EFFECTS
+          PHP_EACH fx_arr AS fx_ind=>fx_off BEGIN
+             READ_ASCII fx_off data_here (0x30)    // yes, we could just read it all in in one go, but
+             SPRINT data "%data%"^"%data_here%"    // speed doesn't matter here and this way is less
+             SET count+=1                          // error-prone
+          END
+     END
+  END
+  // insert the ability data into a new spell
+  INNER_ACTION BEGIN
+   CREATE spl "%spell%"
+      PATCH_IF debug BEGIN
+         SAY NAME1 "%spell%"
+      END
+      INSERT_BYTES 0x72 0x28 // new header
+      WRITE_SHORT 0x68 1 // record header numbers
+      WRITE_LONG 0x6a (0x72 + 0x28)
+      LPF ALTER_SPELL_HEADER  // tbh here I'm just following what's generally done in vanilla resources
+            INT_VAR new_header_type=1
+                    location=4
+                    target=1
+                    min_level=1
+                    damage_type=1
+                    charges=1
+                    range=90
+      END
+      WRITE_SHORT 0x90 count
+      INSERT_BYTES (0x72+0x28) (0x30*count)
+      WRITE_ASCIIE (0x72+0x28) "%data%"
+  END
+  // delete it from the item
+  LPF DELETE_EFFECT INT_VAR check_globals=0 header END
+  // add a cast-spell effect
+  LPF ADD_ITEM_EFFECT INT_VAR type=99 header opcode=146 target=2 parameter1=1 parameter2=1 timing=1 STR_VAR resource="%spell%" END
+END
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Set or unset an item's droppability flag
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION ITM_droppable
+    INT_VAR arguments=1
+BEGIN
+   READ_BYTE 0x18 data
+   PATCH_IF arguments BEGIN
+       SET data=data BOR 0b00000100
+   END ELSE BEGIN
+       SET data=data BAND 0b11111011
+   END
+   WRITE_BYTE 0x18 data
+END
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////               general warning message
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_FUNCTION warning
+       STR_VAR
+             warning=""
+             arguments=""
+             repeat="no"
+BEGIN
+        OUTER_INNER_PATCH ~~ BEGIN
+           LPF warning STR_VAR warning arguments repeat END
+        END
+END
+
+DEFINE_PATCH_FUNCTION warning
+         STR_VAR
+             warning=""
+             arguments=""
+             repeat="no"
+BEGIN
+     PATCH_MATCH "%warning%%arguments%" WITH
+     "" null BEGIN END
+     DEFAULT
+        PATCH_PRINT ~%warning%%arguments%~
+        LPF log_this STR_VAR file=sfo_warnings.txt input= ~%TP2_BASE_NAME% component %COMPONENT_NUMBER%: %warning%%arguments%~ repeat END
+     END
+END
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///  generic logger (simplified reduce-dependency version)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_FUNCTION log_this
+        STR_VAR file=""
+                input=""
+                repeat="yes"
+BEGIN
+        ACTION_IF !FILE_EXISTS ~%data_loc%/%file%~ BEGIN
+           COPY ~.../stratagems-inline/blank~ ~%data_loc%/%file%~
+        END
+        ACTION_IF (~%repeat%~ STRING_COMPARE_CASE ~no~) || !FILE_CONTAINS_EVALUATED ("%data_loc%/%file%" "%input%\($\|%WNL%\|%MNL%\|%LNL\)")BEGIN
+           APPEND_OUTER ~%data_loc%/%file%~ ~%input%~
+        END
+END
+
+DEFINE_PATCH_FUNCTION log_this
+        STR_VAR file=""
+                input=""
+                repeat="yes"
+BEGIN
+        INNER_ACTION BEGIN
+          LAF log_this STR_VAR file input repeat END
+        END
+END
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///// Read an ini file "ini_to_read.ini" into SFO_reserved_ini_hash (mostly borrowed from Kjeron)
+/////
+///// ini key values are treated case-insensitive
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_MACRO SFO_read_ini_file
+BEGIN 
+    LOCAL_SPRINT key ""
+    ACTION_IF FILE_EXISTS "%ini_to_read%" BEGIN
+       COPY - "%ini_to_read%" "%workspace%"
+	    REPLACE_EVALUATE ~^\([^ %TAB%%WNL%]+\) *= *\([^%WNL%$]+\)~
+                     BEGIN
+			// key must start line and cannot contain whitespace
+			// value is everything after the "=" until the newline/end
+			        SPRINT key "%MATCH1%"
+			        TO_LOWER key
+				TEXT_SPRINT $SFO_reserved_ini_hash(~%key%~) ~%MATCH2%~
+		     END	
+                     ~~
+    END
+END
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+///// Check an ini value (case-insensitive)
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION check_ini
+        STR_VAR ini=""
+        RET value
+BEGIN
+        TO_LOWER ini
+        PATCH_IF !VARIABLE_IS_SET $SFO_reserved_ini_hash(~%ini%~) BEGIN
+           SPRINT value 0
+           PATCH_WARN "ini entry %ini% has been checked, but is not present in the ini file"
+        END ELSE BEGIN
+           SPRINT value $SFO_reserved_ini_hash(~%ini%~)
+        END
+END
+
+DEFINE_ACTION_FUNCTION check_ini
+        STR_VAR ini=""
+        RET value
+BEGIN
+       OUTER_PATCH "" BEGIN
+        LPF check_ini STR_VAR ini RET value END
+       END
+END
+
+///////////////////////////////////////////////////////////////////////////////
+//// Helper functions to use in effect patching
+///////////////////////////////////////////////////////////////////////////////
+
+
+DEFINE_PATCH_FUNCTION opcode_is
+  STR_VAR arguments=""
+  RET value
+BEGIN
+   SET value=0
+   READ_SHORT 0x0 opcode
+   SPRINT list "%arguments%"
+   WHILE "%list%" STRING_COMPARE_CASE "" BEGIN
+         LPF return_first_entry STR_VAR list RET entry list END
+         PATCH_IF opcode=entry BEGIN
+            SET value=1
+         END
+   END
+END
+
+DEFINE_PATCH_FUNCTION opcode_is_not
+  STR_VAR arguments=""
+  RET value
+BEGIN
+   SET value=1
+   READ_SHORT 0x0 opcode
+   SPRINT list "%arguments%"
+   WHILE "%list%" STRING_COMPARE_CASE "" BEGIN
+         LPF return_first_entry STR_VAR list RET entry list END
+         PATCH_IF opcode=entry BEGIN
+            SET value=0
+         END
+   END
+END
+
+DEFINE_PATCH_FUNCTION add_to_duration
+   STR_VAR arguments=""
+BEGIN
+   READ_SHORT 0xe duration
+   WRITE_SHORT 0xe (duration + arguments)
+END
+
+///////////////////////////////////////////////////////////////////////////////
+///     Read in every entry in spell.ids and set a variable with that name whose
+///     value is the spell resref, and store the data in the sfo_spell_resrefs array
+///
+///     e.g. WIZARD_FIREBALL = SPWI304
+///          $sfo_spell_resrefs("WIZARD_FIREBALL") = SPWI304
+///
+///    If sfo_include_scrolls is set to 1, also reads in every divine and arcane
+///    spell, and stores them like this:
+///
+///    WIZARD_FIREBALL_SCROLL=scrl1g
+///    $sfo_arcane_scrolls("WIZARD_FIREBALL")=scrl1g
+///    CLERIC_FREE_ACTION_SCROLL=scrl58
+///    $sfo_divine_scrolls("CLERIC_FREE_ACTION")=scrl58
+///////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_MACRO read_in_spell_scroll_resrefs BEGIN
+   ACTION_IF !IS_AN_INT sfo_internal_spells_read BEGIN
+      ACTION_IF !IS_AN_INT sfo_include_scrolls BEGIN
+         OUTER_SET sfo_include_scrolls=0
+      END
+      ACTION_IF sfo_include_scrolls BEGIN
+         PRINT "Loading spell and scroll data..."
+      END ELSE BEGIN
+         PRINT "Loading spell data..."
+      END
+      LAF internal_spell_scroll_resrefs INT_VAR sfo_include_scrolls RET_ARRAY sfo_arcane_scrolls sfo_divine_scrolls sfo_spell_resrefs END
+      ACTION_PHP_EACH sfo_spell_resrefs AS idsname=>resref BEGIN
+         OUTER_SPRINT "%idsname%" "%resref%"
+      END
+      ACTION_IF sfo_include_scrolls BEGIN
+        ACTION_PHP_EACH sfo_arcane_scrolls AS idsname=>resref BEGIN
+         OUTER_SPRINT "%idsname%_SCROLL" "%resref%"
+        END
+        ACTION_PHP_EACH sfo_divine_scrolls AS idsname=>resref BEGIN
+         OUTER_SPRINT "%idsname%_SCROLL" "%resref%"
+        END
+      END
+      PRINT "...done"
+   OUTER_SET sfo_internal_spells_read=1 
+   END
+END
+
+DEFINE_ACTION_FUNCTION internal_spell_scroll_resrefs
+    INT_VAR sfo_include_scrolls=1
+    RET_ARRAY sfo_arcane_scrolls
+              sfo_divine_scrolls
+              sfo_spell_resrefs
+BEGIN
+    SILENT
+    // first get data from spell.ids
+    COPY_EXISTING spell.ids override
+         READ_2DA_ENTRIES_NOW spell_resref_entries 2
+         FOR (this_row=0;this_row<spell_resref_entries;this_row +=1) BEGIN
+             READ_2DA_ENTRY_FORMER spell_resref_entries this_row 1 idsname
+             READ_2DA_ENTRY_FORMER spell_resref_entries this_row 0 idsnum
+             PATCH_IF IS_AN_INT idsnum BEGIN
+               INNER_PATCH_SAVE idsref "%idsnum%" BEGIN
+                 REPLACE_TEXTUALLY "1\([0-9][0-9][0-9]\)" "SPPR\1"
+                 REPLACE_TEXTUALLY "2\([0-9][0-9][0-9]\)" "SPWI\1"
+                 REPLACE_TEXTUALLY "3\([0-9][0-9][0-9]\)" "SPIN\1"
+                 REPLACE_TEXTUALLY "4\([0-9][0-9][0-9]\)" "SPCL\1"
+               END
+               SPRINT $sfo_spell_resrefs("%idsname%") "%idsref%"
+             END
+         END
+    BUT_ONLY
+    ACTION_IF sfo_include_scrolls BEGIN
+    // go through the item files
+    COPY_EXISTING_REGEXP ".*\.itm$" override
+        // handle TUTU file conventions, we want "_SCRL" prioritised over "SCRL"
+        PATCH_IF FILE_EXISTS_IN_GAME ~_%SOURCE_RES%.itm~ BEGIN
+           SPRINT filename ~_%SOURCE_RES%~
+        END ELSE BEGIN
+           SPRINT filename ~%SOURCE_RES%~
+        END
+        TO_LOWER filename
+        PATCH_MATCH "%filename%" WITH
+        TTSCRL01 TTSCRL02 BEGIN END // tutorial scrolls - skip them
+        DEFAULT
+         INNER_ACTION BEGIN
+            // the core spell edit
+            COPY_EXISTING ~%filename%.itm~ ~override~
+              PATCH_IF SHORT_AT 0x1c=11 BEGIN // scroll
+                 PATCH_IF (INDEX_BUFFER (CASE_INSENSITIVE SPWI)>=0 || INDEX_BUFFER (CASE_INSENSITIVE SPPR)>=0) BEGIN // probably a spell scroll, go through carefully
+                       SET success=0
+                       GET_OFFSET_ARRAY ab_arr ITM_V10_HEADERS
+                       PHP_EACH ab_arr AS ab_ind=>ab_off BEGIN
+                           GET_OFFSET_ARRAY2 fx_arr ab_off ITM_V10_HEAD_EFFECTS
+                           PHP_EACH fx_arr AS fx_ind=>fx_off BEGIN
+                               READ_SHORT fx_off opcode
+                               PATCH_IF (opcode=146 || opcode=147 || opcode=148) & !success BEGIN
+                                    SET success=1
+                                    READ_ASCII (0x14 + fx_off) resref
+                                    TO_UPPER resref
+                                    SPRINT $internal_scroll_map("%resref%") "%filename%"
+                               END
+                           END
+                       END
+                 END
+              END
+            BUT_ONLY // end of the core spell edit
+         END // end of inner_action
+        END
+       BUT_ONLY // end of the outer spell edit
+       // match up the arrays
+       ACTION_PHP_EACH sfo_spell_resrefs AS idsname=>resref BEGIN
+          ACTION_IF VARIABLE_IS_SET $internal_scroll_map("%resref%") BEGIN
+                ACTION_MATCH "%idsname%" WITH 
+                "WIZARD_.*" BEGIN
+                      OUTER_SPRINT $sfo_arcane_scrolls("%idsname%") $internal_scroll_map("%resref%")
+                END
+                "CLERIC_.*" BEGIN
+                      OUTER_SPRINT $sfo_divine_scrolls("%idsname%") $internal_scroll_map("%resref%")
+                END
+                DEFAULT 
+                END
+          END
+       END
+     END ELSE BEGIN
+        OUTER_SPRINT $sfo_arcane_scrolls("null") ""
+        OUTER_SPRINT $sfo_divine_scrolls("null") ""
+     END
+END
+
+
+///////////////////////////////////////////////////////////////////////////////
+//// Make a copy of a BAM file with the same frame structure but where every
+//// frame is blank.
+///////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_FUNCTION make_blank_bam_copy
+    STR_VAR old=""
+            new=""
+BEGIN
+ COPY_EXISTING "%old%.bam" "override/%new%.bam"
+   //decompress
+   READ_ASCII 0x0 sg (4) //Signature
+   PATCH_IF ~%sg%~ STRING_EQUAL_CASE ~BAMC~  BEGIN
+       SET compressed=1
+       READ_LONG 0x8 dl //Uncompressed data length
+       DECOMPRESS_REPLACE_FILE 0xc (SOURCE_SIZE - 0xc) dl
+   END
+   // get file-structure data
+   READ_BYTE 0xa cycle_num
+   READ_LONG 0xc frame_off
+   READ_LONG 0x14 frame_lookup_off
+   READ_SHORT 0x8 frame_num
+   SET cycle_off = frame_off + (frame_num * 0xc)
+   // attempt to blank frame zero
+   READ_BYTE (frame_off+0xb) frame_compression_check
+   PATCH_IF !frame_compression_check BEGIN // if it's compressed, abort - this code can't handle it
+      READ_SHORT (frame_off+0x8) frame_data_off
+      READ_SHORT (frame_off) frame_width
+      READ_SHORT (frame_off + 0x2) frame_height
+      SET frame_size=frame_height * frame_width
+      FOR (i=0;i<frame_size;i+=1) BEGIN
+           WRITE_SHORT (frame_data_off + 2 * i) 0
+      END
+      // redirect all cycles to frame 0
+      FOR (i=0;i<cycle_num;i+=1) BEGIN
+         READ_SHORT (cycle_off + 4*i) frame_count
+         READ_SHORT (cycle_off + 4*i + 2) lookup_index
+         FOR (j=0;j<frame_count;j+=1) BEGIN
+           WRITE_SHORT (frame_lookup_off + lookup_index + 2*j ) 0
+         END
+      END
+   END // end of the do-we-go-ahead? loop
+   // compress
+   PATCH_IF compressed BEGIN
+    COMPRESS_REPLACE_FILE 0 dl 9
+    INSERT_BYTES 0x0 0xc
+    WRITE_ASCII 0x0 ~BAMCV1  ~
+    WRITE_LONG 0x8 dl
+   END
+ // BUT_ONLY
+END
+
+//////////////////////////////////////////////////////////////////////////////////////
+// variant duplicate of 'ds_resolve_stat' version in ds.tph
+//
+// this version autodetermines the 'ids' variable if it's not set (or set to -1)
+// along these lines:
+// - if 'index' is set to a nonzero value, assume ids=2
+// otherwise, assume it's 1 on EE, 2 otherwise
+//////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_FUNCTION resolve_stat INT_VAR ids="-1" index=0 delete=0 STR_VAR id="" RET stat_ind BEGIN
+
+ACTION_IF ids<0 BEGIN
+   ACTION_IF index>0 BEGIN
+      OUTER_SET ids=2
+   END ELSE
+   ACTION_IF enhanced_edition BEGIN
+      OUTER_SET ids=1
+   END ELSE BEGIN
+      OUTER_SET ids=2
+   END
+END
+
+OUTER_SPRINT ids_file stats OUTER_SET min_new=401
+
+ACTION_IF ids=0 BEGIN OUTER_SPRINT ids_file extstate OUTER_SET min_new=0 END
+ACTION_IF ids=1 BEGIN OUTER_SPRINT ids_file splstate OUTER_SET min_new=0 END
+
+COPY_EXISTING ~%ids_file%.ids~ override
+  stat_ind=0
+  found=0
+
+  READ_2DA_ENTRIES_NOW stats 2
+  FOR (row=0;row<stats;row+=1) BEGIN
+    READ_2DA_ENTRY_FORMER stats row 0 ind
+    READ_2DA_ENTRY_FORMER stats row 1 str
+    SET $stat("%row%") = ind
+    PATCH_IF index BEGIN
+      PATCH_IF ind=index BEGIN
+        REMOVE_2DA_ROW row 2
+        found=1
+        PATCH_IF delete=0 BEGIN
+          INSERT_2DA_ROW row 2 ~%index% %id%~
+        END
+        row=stats
+      END
+    END ELSE BEGIN
+      PATCH_IF ~%str%~ STRING_EQUAL_CASE ~%id%~ BEGIN
+        stat_ind=ind
+        found=1
+     /* row=stats */ // don't stop looking, the same ID may be assigned to a greater index, which takes priority when compiling
+      END
+    END
+  END
+
+  PATCH_IF found=0 BEGIN
+    stat_ind=min_new
+    PHP_EACH stat AS row => ind BEGIN
+      PATCH_IF found=0 && (row+1 < stats) BEGIN // not at the end of file
+        next_row = row+1
+        next_ind = EVAL $stat("%next_row%")
+        PATCH_IF index BEGIN
+          PATCH_IF index<next_ind && index>ind BEGIN
+            INSERT_2DA_ROW next_row 2 ~%index% %id%~
+            found=1
+          END
+        END ELSE BEGIN
+          PATCH_IF stat_ind<next_ind BEGIN
+            PATCH_IF ind<stat_ind BEGIN
+              INSERT_2DA_ROW next_row 2 ~%stat_ind% %id%~
+              found=1
+            END ELSE BEGIN
+              stat_ind+=1
+              PATCH_IF stat_ind<next_ind BEGIN
+                INSERT_2DA_ROW next_row 2 ~%stat_ind% %id%~
+                found=1
+              END
+            END
+          END
+        END
+      END ELSE BEGIN // at the end of file
+        PATCH_IF found=0 BEGIN
+          PATCH_IF index BEGIN
+            INSERT_2DA_ROW stats 2 ~%index% %id%~
+          END ELSE BEGIN
+            PATCH_IF stat_ind>ind BEGIN
+              INSERT_2DA_ROW stats 2 ~%stat_ind% %id%~
+            END ELSE BEGIN
+              stat_ind+=1
+              INSERT_2DA_ROW stats 2 ~%stat_ind% %id%~
+            END
+          END
+        END
+      END
+    END // PHP_EACH
+  END
+
+END
+
+DEFINE_PATCH_FUNCTION resolve_stat INT_VAR ids="-1" index=0 delete=0 STR_VAR id="" RET stat_ind BEGIN
+   INNER_ACTION BEGIN
+     LAF resolve_stat INT_VAR ids index delete STR_VAR id RET stat_ind END
+   END
+END
+
+//////////////////////////////////////////////////////////////////////////////
+//// Insert a script at the top of the stack, shuffling other scripts down if
+//// necessary to make space. (Lightweight version of SCS's insert_script_high
+//// and friends.)
+//////////////////////////////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION insert_script
+    INT_VAR offset=0x248
+    STR_VAR script=""
+BEGIN
+   PATCH_IF offset>0x268 BEGIN
+      PATCH_WARN "failed to insert script %script% into %SOURCE_RES%: no room!"
+   END ELSE BEGIN
+      READ_ASCII offset script_old
+      WRITE_ASCIIE offset "%script%" (8)
+      PATCH_MATCH "%script_old%" WITH "" none BEGIN END
+      DEFAULT
+         offset+=0x8
+         SPRINT script "%script_old%"
+         LPF insert_script INT_VAR offset STR_VAR script END
+      END
+   END
+END
+
+///////////////////////////////////////////////////////////////////////////////
+//// Recolor a BAM
+////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_PATCH_FUNCTION patch_colors
+    STR_VAR condition=""
+            action=""
+BEGIN
+   SET compressed=0
+   READ_ASCII 0x0 sg (4) //Signature
+   PATCH_IF ~%sg%~ STRING_EQUAL_CASE ~BAMC~  BEGIN
+       SET compressed=1
+       READ_LONG 0x8 dl //Uncompressed data length
+       DECOMPRESS_REPLACE_FILE 0xc (SOURCE_SIZE - 0xc) dl
+   END
+   READ_LONG 0x10 pal_off
+   FOR (i=1;i<256;i+=1) BEGIN // skip top left
+        SET offset= pal_off + i*4
+        LPF read_color INT_VAR offset RET red blue green END
+        PATCH_IF "%condition%" STRING_COMPARE "" BEGIN
+           LPF "%condition%" INT_VAR red green blue RET value END
+        END ELSE BEGIN
+           SET value=1
+        END
+        PATCH_IF value BEGIN
+           LPF "%action%" INT_VAR red blue green RET red blue green END
+           LPF write_color INT_VAR offset red blue green END
+        END
+   END
+   PATCH_IF compressed BEGIN
+    COMPRESS_REPLACE_FILE 0 dl 9
+    INSERT_BYTES 0x0 0xc
+    WRITE_ASCII 0x0 ~BAMCV1  ~
+    WRITE_LONG 0x8 dl
+   END
+END
+
+
+DEFINE_PATCH_FUNCTION read_color
+   INT_VAR offset=0
+   RET red green blue
+BEGIN
+    READ_BYTE offset blue
+    READ_BYTE (offset+1) green
+    READ_BYTE (offset+2) red
+END
+
+DEFINE_PATCH_FUNCTION write_color
+   INT_VAR red=0 green=0 blue=0 offset=0
+BEGIN
+   LPF legal_byte INT_VAR input=green RET green=output END
+   LPF legal_byte INT_VAR input=blue RET blue=output END
+   LPF legal_byte INT_VAR input=red RET red=output END
+   WRITE_BYTE offset blue
+   WRITE_BYTE (offset+1) green
+   WRITE_BYTE (offset+2) red
+END
+
+DEFINE_PATCH_FUNCTION legal_byte INT_VAR input=0 RET output BEGIN
+   output = input>0x100 ? 0x100 : input
+   output = output<0 ? 0 : output
+END
+
+///////////////////////////////////////////////////////////////////////////////
+////Add a sectype with no associated string
+////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_FUNCTION add_silent_sectype
+   STR_VAR sectype=""
+   RET sectype_value
+BEGIN
+   ADD_SECTYPE "%sectype%" ""
+   OUTER_SET sectype_value="%sectype%"
+   COPY_EXISTING "msectype.2da" override
+       REPLACE_TEXTUALLY "%sectype%\( \|%TAB%\)+[0-9]+\(%WNL%\|%LNL%\|%MNL%\)" "%sectype% -1"
+   BUT_ONLY
+END
+
+///////////////////////////////////////////////////////////////////////////////
+////Lightweight version of extend_area_script and friends
+////////////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////               gets the area script (and allocates one if needed)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+DEFINE_ACTION_FUNCTION get_area_script
+    STR_VAR area=""
+    RET script
+BEGIN
+   COPY_EXISTING ~%area%.are~ ~override~
+       READ_ASCII 0x94 script
+       PATCH_IF (~%script%~ STRING_EQUAL_CASE ~none~ || ~%script%~ STRING_EQUAL_CASE ~~) BEGIN
+          INNER_PATCH_SAVE ~script~ ~%area%~ BEGIN
+             READ_ASCII 0x0 fwcheck (2)
+             PATCH_IF ~%fwcheck%~ STRING_EQUAL_CASE ~FW~ BEGIN
+                INSERT_BYTES 0x0 1
+                WRITE_ASCII 0x0 ~_AR~
+             END
+          END
+          WRITE_ASCIIE 0x94 "%script%" (8)
+       END
+   BUT_ONLY
+   ACTION_IF !FILE_EXISTS_IN_GAME ~%script%.bcs~ BEGIN
+                <<<<<<<< %script%.baf
+                >>>>>>>>
+                COMPILE ~%script%.baf~
+   END
+
+END
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////               extends the area script
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_FUNCTION extend_area_script
+   STR_VAR area=""
+           top=""
+           bottom=""
+           location=""
+           variables=""
+           inline="no"
+BEGIN
+   ACTION_IF ~%area%~ STRING_COMPARE ~~ BEGIN
+    ACTION_IF "%top%%bottom%" STRING_EQUAL "" BEGIN
+         LAF warning STR_VAR warning="extend_area_script called on area %area% with empty argument" END
+    END
+    LAF return_first_entry STR_VAR list= ~%area%~ RET entry=entry area=list END
+    LAF get_area_script STR_VAR area= ~%entry%~ RET file=script END
+    OUTER_SPRINT top_true ""
+	OUTER_SPRINT bottom_true ""
+	ACTION_FOR_EACH loc IN top bottom BEGIN
+	 ACTION_IF EVAL "%%loc%%" STRING_COMPARE "" BEGIN
+	   ACTION_IF "%inline%" STRING_EQUAL_CASE "yes" BEGIN
+			OUTER_SPRINT "%loc%_true" EVAL ".../stratagems-inline/%%loc%%.baf"
+	   END ELSE	 
+	   ACTION_IF "%location%" STRING_COMPARE "" AND FILE_EXISTS "%scsroot%/%component_loc%/%location%/%%loc%%.baf" BEGIN
+		OUTER_SPRINT "%loc%_true" EVAL "%scsroot%/%component_loc%/%location%/%%loc%%.baf"
+	   END ELSE
+       ACTION_IF FILE_EXISTS "%scsroot%/%component_loc%/%%loc%%.baf" BEGIN
+		OUTER_SPRINT "%loc%_true" EVAL "%scsroot%/%component_loc%/%%loc%%.baf"	  
+	   END ELSE 
+	   ACTION_IF FILE_EXISTS "%%loc%%" BEGIN
+		OUTER_SPRINT "%loc%_true" EVAL "%%loc%%"	  	  
+	   END ELSE BEGIN
+	    OUTER_SPRINT loc_actual EVAL "%%loc%%"
+	    WARN "extend_area_script called with %loc% set to %loc_actual%, but I can't find that script"
+	   END
+	 END
+	END
+	ACTION_IF "%top_true%" STRING_COMPARE "" BEGIN
+		EXTEND_TOP "%file%.bcs" "%top_true%" EVALUATE_BUFFER
+	END 
+	ACTION_IF "%bottom_true%" STRING_COMPARE "" BEGIN
+		EXTEND_BOTTOM "%file%.bcs" "%bottom_true%" EVALUATE_BUFFER
+	END
+    LAF extend_area_script STR_VAR area top bottom location inline ssl variables END
+   END
+END
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////               returns a valid deathvar
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_FUNCTION resolve_dv
+	STR_VAR creature="" default="" 
+	RET dv
+BEGIN
+	ACTION_IF "%default%" STRING_EQUAL "" BEGIN
+		OUTER_SPRINT default "%creature%"
+	END
+	COPY_EXISTING "%creature%.cre" override
+		READ_ASCII DEATHVAR dv
+		PATCH_MATCH "%dv%" WITH none null "" BEGIN
+			SPRINT dv "%default%"
+			WRITE_ASCIIE DEATHVAR "%dv%" (0x20)
+		END
+		DEFAULT
+		END
+	BUT_ONLY
+
+
+END

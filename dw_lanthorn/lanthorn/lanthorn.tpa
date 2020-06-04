@@ -1,0 +1,379 @@
+DEFINE_ACTION_FUNCTION lanthorn BEGIN
+
+	WITH_TRA "%scs_tra_loc%/english/lanthorn.tra" "%scs_tra_loc%/%LANGUAGE%/lanthorn.tra" BEGIN
+
+	// special case: give the Alhoon a dv
+	
+	LAF resolve_dv STR_VAR creature=mindal01 RET dv_alhoon=dv END
+
+	// read in data (and remove entries where the skip ini has been set)
+	
+	LAF read_lens_data RET questcount RET_ARRAY lens_global lens_check lens_neg_check lens_script lens_sage_strref lens_journal_strref lens_is_vanilla END
+	
+	// find where to put the initialisation script
+	
+	COPY_EXISTING "ar2401.are" override
+		READ_ASCII 0x94 area_script
+		PATCH_MATCH "%area_script%" WITH 
+		none null "" BEGIN
+			SPRINT area_script ar2401 
+			WRITE_ASCIIE 0x94 "%area_script%" (8)
+		END
+		DEFAULT END
+	BUT_ONLY
+	
+	// install non-vanilla entries
+	
+	ACTION_PHP_EACH lens_is_vanilla AS id=>value BEGIN
+		ACTION_IF !value BEGIN
+			LAF install_lens STR_VAR id END
+		END
+	
+	END
+	
+	// build the initialisation script
+	
+	LAF build_init_script STR_VAR location="%area_script%" END
+	
+	
+	// make the .d file detailing the actual sage prophecies
+
+	LAF make_sage_d END
+	
+	// clear out unwanted journal entries from the dialog file
+	
+	COPY_EXISTING "c6elhan2.dlg" override
+		DECOMPILE_AND_PATCH BEGIN
+			REPLACE_TEXTUALLY "AddJournalEntry(97342,QUEST)" ""
+			REPLACE_TEXTUALLY "UNSOLVED_JOURNAL #57914" ""
+		END
+	BUT_ONLY
+	
+	// compile the dialog
+	
+	COMPILE "%MOD_FOLDER%/%component_loc%/elhan.d" "%workspace%/sage.d" EVALUATE_BUFFER
+	
+	// add journal entries when you recover lenses, and adjust the xp level
+	 OUTER_SET xp_original=45000
+	 LAF check_ini STR_VAR ini=lens_xp RET xp_new=value END
+     ACTION_PHP_EACH lens_script AS id=>script BEGIN
+		COPY_EXISTING "%script%.are" override
+			READ_ASCII 0x94 area_script
+		BUT_ONLY
+		COPY_EXISTING "%area_script%.bcs" override
+			DECOMPILE_AND_PATCH BEGIN
+				REPLACE_TEXTUALLY ~SetGlobal("LensNumber","GLOBAL",\([1-9]\))~ ~SetGlobal("LensNumber","GLOBAL",\1)AddJournalEntry(@122,QUEST)~
+			END
+		BUT_ONLY
+		ACTION_IF !(xp_original=xp_new) BEGIN
+			ACTION_IF xp_new=0 BEGIN
+			    LAF ALTER_SCRIPT_BLOCK STR_VAR script="%area_script%" match=LensNumber swap_out="AddXPObject.*" swap_in=" " END			
+			END ELSE BEGIN
+			    LAF ALTER_SCRIPT_BLOCK STR_VAR script="%area_script%" match=LensNumber swap_out="%xp_original%" swap_in="%xp_new%" END
+			END
+		END
+	 END
+	
+	// add appropriate bams to the lens image
+	
+	COPY_EXISTING "c6lens.itm" override
+		WRITE_ASCII 0x3a dw_lanth (8)
+		WRITE_ASCII 0x44 ggem01 (8)
+		WRITE_ASCII 0x58 cmisc21 (8)
+	BUT_ONLY
+	COPY "%MOD_FOLDER%/%component_loc%/dw_lanth.bam" override // recolored version of the Star Sapphire
+	
+	
+	// add journal entries to BGEE.lua
+	
+	ADD_JOURNAL EXISTING TITLE (#74459) @120 @121 @122 @135 @136 @137 @138
+	
+	END // end of WITH_TRA
+END
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_FUNCTION read_lens_data 
+	RET questcount
+	RET_ARRAY lens_global lens_check lens_neg_check lens_script lens_sage_strref lens_journal_strref lens_is_vanilla
+BEGIN
+	COPY "%MOD_FOLDER%/%component_loc%/data.2da" "%workspace%"
+		EVALUATE_BUFFER
+		questcount=0
+		COUNT_2DA_ROWS 7 rowcount
+		FOR (row=1;row<rowcount;row+=1) BEGIN
+			READ_2DA_ENTRY row 0 8 id
+			READ_2DA_ENTRY row 1 8 global
+			READ_2DA_ENTRY row 2 8 check
+			READ_2DA_ENTRY row 3 8 neg_check
+			PATCH_IF "%neg_check%" STRING_EQUAL "*" BEGIN
+				SPRINT neg_check "!%check%"
+			END
+			READ_2DA_ENTRY row 4 8 script
+			READ_2DA_ENTRY row 5 8 sage_strref
+			READ_2DA_ENTRY row 6 8 journal_strref
+			READ_2DA_ENTRY row 7 8 is_vanilla
+			TO_LOWER id
+			LPF check_ini STR_VAR ini="skip_%id%" RET value END
+			PATCH_IF !value && (is_vanilla || !vanilla_version) BEGIN
+				questcount +=1
+				SPRINT $lens_global("%id%") "%global%"
+				SPRINT $lens_check("%id%") "%check%"
+				SPRINT $lens_neg_check("%id%") "%neg_check%"
+				SPRINT $lens_script("%id%") "%script%"
+				SPRINT $lens_sage_strref("%id%") "%sage_strref%"
+				SPRINT $lens_journal_strref("%id%") "%journal_strref%"
+				SPRINT $lens_is_vanilla("%id%") "%is_vanilla%"
+				
+			END ELSE BEGIN
+				PATCH_IF is_vanilla BEGIN
+				 INNER_ACTION BEGIN
+					LAF DELETE_SCRIPT_BLOCK STR_VAR script match=LensPlot END
+				 END
+				END
+			END
+		END
+	BUT_ONLY
+END
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Make the sage dialog additions (not fully encapsulated) 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+DEFINE_ACTION_FUNCTION make_sage_d
+BEGIN
+
+<<<<<<<< .../stratagems-inline/sage_top.d
+APPEND c6warsa1
+>>>>>>>>
+<<<<<<<< .../stratagems-inline/sage_mid.d
+END
+
+EXTEND_BOTTOM c6elhan2 quest_three_lenses quest_two_lenses quest_single_lens elhan_comment_3 elhan_line_2 elhan_line_3
+>>>>>>>>
+<<<<<<<< .../stratagems-inline/sage_end.d
+END
+>>>>>>>>
+<<<<<<<< .../stratagems-inline/sage_add.d
+IF ~~ THEN BEGIN sage_%id%
+SAY %sage_strref%
+IF ~Global("dw_sage_count","MYAREA",0)~ THEN UNSOLVED_JOURNAL %journal_strref% EXTERN c6warsa2 elhan_comment_1
+IF ~Global("dw_sage_count","MYAREA",1)~ THEN UNSOLVED_JOURNAL %journal_strref% EXTERN c6warsa2 elhan_comment_2
+IF ~Global("dw_sage_count","MYAREA",2)~ THEN UNSOLVED_JOURNAL %journal_strref% EXTERN c6elhan2 elhan_comment_3
+END
+>>>>>>>>
+<<<<<<<< .../stratagems-inline/sage_add_2.d
+IF ~Global("%global%","GLOBAL",1)Global("dw_%id%","LOCALS",0)~ THEN DO ~SetGlobal("dw_%id%","LOCALS",1)~ EXTERN c6warsa1 sage_%id%
+>>>>>>>>
+
+COPY ".../stratagems-inline/sage_top.d" "%workspace%/sage.d"
+
+	PHP_EACH lens_sage_strref AS id=>sage_strref BEGIN
+		SPRINT journal_strref $lens_journal_strref("%id%")
+		APPEND_FILE TEXT ".../stratagems-inline/sage_add.d"
+		EVALUATE_BUFFER
+	END
+	APPEND_FILE TEXT ".../stratagems-inline/sage_mid.d"
+	PHP_EACH lens_global AS id=>global BEGIN
+		APPEND_FILE TEXT ".../stratagems-inline/sage_add_2.d"
+		EVALUATE_BUFFER
+	END
+	APPEND_FILE TEXT ".../stratagems-inline/sage_end.d"
+	
+
+END
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Install a new lens
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_FUNCTION install_lens
+	STR_VAR id=""
+BEGIN
+	// get salient data
+	OUTER_SPRINT check $lens_check("%id%")
+	OUTER_SPRINT area $lens_script("%id%")
+	OUTER_SPRINT global $lens_global("%id%")
+	
+	// install the default stuff that all lenses get
+	LAF extend_area_script STR_VAR area top=lens_default inline=yes END
+	// install the bespoke stuff that places the lens for this particular case
+	LAF extend_area_script STR_VAR area top="%id%" location=script_add END
+
+END
+
+<<<<<<<< .../stratagems-inline/lens_default.baf
+IF
+	%check%
+	Global("FinishedLensPlot","MYAREA",0)
+THEN
+	RESPONSE #100
+		SetGlobal("FinishedLensPlot","MYAREA",1)
+		IncrementGlobal("LensPlot","GLOBAL",1)
+		Continue()
+END
+
+IF
+	Global("LensNumber","GLOBAL",0)
+	NumItemsParty("c6lens",1)  // Lens Piece
+THEN
+	RESPONSE #100
+		SetGlobal("LensNumber","GLOBAL",1)
+		AddXPObject(Player1,45000)
+		AddXPObject(Player2,45000)
+		AddXPObject(Player3,45000)
+		AddXPObject(Player4,45000)
+		AddXPObject(Player5,45000)
+		AddXPObject(Player6,45000)
+		Continue()
+END
+
+IF
+	Global("LensNumber","GLOBAL",1)
+	NumItemsParty("c6lens",2)  // Lens Piece
+THEN
+	RESPONSE #100
+		SetGlobal("LensNumber","GLOBAL",2)
+		AddXPObject(Player1,45000)
+		AddXPObject(Player2,45000)
+		AddXPObject(Player3,45000)
+		AddXPObject(Player4,45000)
+		AddXPObject(Player5,45000)
+		AddXPObject(Player6,45000)
+		Continue()
+END
+
+IF
+	Global("LensNumber","GLOBAL",2)
+	NumItemsParty("c6lens",3)  // Lens Piece
+THEN
+	RESPONSE #100
+		SetGlobal("LensNumber","GLOBAL",3)
+		AddXPObject(Player1,45000)
+		AddXPObject(Player2,45000)
+		AddXPObject(Player3,45000)
+		AddXPObject(Player4,45000)
+		AddXPObject(Player5,45000)
+		AddXPObject(Player6,45000)
+		Continue()
+END
+>>>>>>>>
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/// Build script - not fully encapsulated, assumes questcount, lens_global, lens_check in background
+////////////////////////////////////////////////////////////////////////////////////////////////////
+
+DEFINE_ACTION_FUNCTION build_init_script
+	STR_VAR location=""
+BEGIN
+
+	OUTER_SPRINT debug_line ""
+	LAF check_ini STR_VAR ini=debug RET debug=value END
+	
+	/*
+	ACTION_IF debug BEGIN
+		OUTER_SPRINT debug_line ~Global("dw_lens_test","GLOBAL",1)~
+	END
+	*/	
+	
+	// work out the thresholds
+	
+	OUTER_SET one_lens=questcount - 1
+	OUTER_SET two_lens=questcount - 2
+
+	// set up basic script
+	
+	COPY ".../stratagems-inline/init.baf" "%workspace%" EVALUATE_BUFFER
+	
+	// add the extra bits
+
+	OUTER_SET ind=0
+	ACTION_PHP_EACH lens_global AS id=>global BEGIN
+		OUTER_SET ind+=1		
+		ACTION_IF debug BEGIN 
+			OUTER_SPRINT debug_line "DisplayStringHead(Player1,~Assigning %id%~)"
+		END 
+		OUTER_SPRINT neg_check $lens_neg_check("%id%")
+		COPY "%workspace%/init.baf" "%workspace%"
+			APPEND_FILE TEXT ".../stratagems-inline/init_add.baf" 
+			EVALUATE_BUFFER
+	END
+	
+	// install
+	
+	COPY + "%workspace%/init.baf" "%workspace%/init2.baf" // for debugging
+	LAF extend_area_script STR_VAR area="%location%" top="%workspace%/init.baf" END
+
+
+
+END
+
+<<<<<<<< .../stratagems-inline/init.baf
+
+IF
+	%debug_line%
+	Global("dw_initialise_lens_quest","GLOBAL",0)
+	GlobalGT("LensPlot","GLOBAL",%one_lens%)
+THEN
+	RESPONSE #100
+		SetGlobal("dw_initialise_lens_quest","GLOBAL",1)
+		SetGlobal("dw_lens_alloc","GLOBAL",0)
+		SetGlobal("dw_lens_count","GLOBAL",0)
+		Continue()
+END
+
+IF
+	%debug_line%
+	Global("dw_initialise_lens_quest","GLOBAL",0)
+	Global("LensPlot","GLOBAL",%one_lens%)
+THEN
+	RESPONSE #100
+		SetGlobal("dw_initialise_lens_quest","GLOBAL",1)
+		SetGlobal("dw_lens_alloc","GLOBAL",1)
+		SetGlobal("dw_lens_count","GLOBAL",0)
+		Continue()
+END
+
+IF
+	%debug_line%
+	Global("dw_initialise_lens_quest","GLOBAL",0)
+	Global("LensPlot","GLOBAL",%two_lens%)
+THEN
+	RESPONSE #100
+		SetGlobal("dw_initialise_lens_quest","GLOBAL",1)
+		SetGlobal("dw_lens_alloc","GLOBAL",2)
+		SetGlobal("dw_lens_count","GLOBAL",0)
+		Continue()
+END
+
+IF
+	%debug_line%
+	Global("dw_initialise_lens_quest","GLOBAL",0)
+	GlobalLT("LensPlot","GLOBAL",%two_lens%)
+THEN
+	RESPONSE #100
+		SetGlobal("dw_initialise_lens_quest","GLOBAL",1)
+		SetGlobal("dw_lens_alloc","GLOBAL",3)
+		SetGlobal("dw_lens_count","GLOBAL",0)
+		Continue()
+END
+
+>>>>>>>>
+
+<<<<<<<< .../stratagems-inline/init_add.baf
+IF
+	Global("dw_initialise_lens_quest","GLOBAL",1)
+	GlobalsLT("dw_lens_count","dw_lens_alloc")
+	Global("%global%","GLOBAL",0)
+	RandomNum(%questcount%,%ind%)
+	%neg_check%
+THEN
+	RESPONSE #100
+		SetGlobal("%global%","GLOBAL",1)
+		IncrementGlobal("dw_lens_count","GLOBAL",1)
+		%debug_line%
+		Wait(1)
+		Continue()
+END	
+>>>>>>>>

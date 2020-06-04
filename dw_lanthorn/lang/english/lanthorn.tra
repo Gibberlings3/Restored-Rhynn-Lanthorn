@@ -1,0 +1,73 @@
+@1=~Our sages have found signs of the Lanthorn in several places in human lands. We suspect that the thief has disassembled the artifact and hidden its lenses. But as for that thief, the sages have not been able to divine where they went, despite their best efforts.~
+
+@2=~Our sages have found a trace of the Lanthorn in human lands, but the magical signature is weak. We suspect that the thief has removed a lens from the Lanthorn and hidden it. But as for that thief, the sages have not been able to divine where they went, despite their best efforts.~
+
+@3=~It is clear, in any case, that our worst fears are confirmed, and the Lanthorn is no longer in elven territory.~
+
+
+// FOR TRANSLATORS: these strings are taken almost verbatim from strings 57946, 57948, 57949, 57950, 57951, 57952, 57954
+
+@4=~A pane of elven origin is held amidst the servants of nature, in the grasp of the beasts that die to the fire.~
+@5=~Beneath the streets in a human city, within the kingdom of the blind, the beast does not see what it has even now.~
+@6=~Long hidden with a family's past, abandoned unintentionally with the sealing of the horrors below. Unearthed by invaders of troll and digger, they know not what they have.~
+@7=~In the lair of a crimson wyrm, but not a trinket in the hoard, a liar points the way to treasure, though she knows not the one she holds.~
+@8=~A traitor among the thieves, he seeks the height of leadership within a guild anew, not knowing the prize he holds.~
+@9=~Jailor of the tiefling, he knows not what he has. On the path of minstrels and troubadours lies a prize within the altar.~
+@10=~In the talons of a beast of shadow, amidst the ruins of light near witches and hills. The pane is a curiosity, but he knows its power not.~
+
+// FOR TRANSLATORS: strings @11, @13 and @15 are adapted from Elhan's side comments in strings 55060, 55061, 55062
+
+@11=~We can be no more specific than this.~
+@12=~Sage, tell <CHARNAME> the second of the divinations.~
+@13=~I hope this has meaning for you, <CHARNAME>.~
+@14=~Sage, speak the last divination.~
+@15=~I'm sorry this is unclear, but I think sages make a habit of being confusing on purpose.~
+
+
+@16=~And there remains the matter of the missing lens. Here we know a little, through the divinations of the sages. But our advice is cryptic, as such divinations always are. Sage - tell <CHARNAME> what you have learned.~
+@17=~And there remains the matter of the missing lenses. Here we know a little, through the divinations of the sages. But our advice is cryptic, as such divinations always are. Sage - tell <CHARNAME> what you have learned of the first lens.~
+@18=~That is all we have learned. We cannot intervene in human lands - <CHARNAME>, we must rely on you for this also.~
+@19=~The sages tell me that you have recovered all of the missing lenses - I congratulate you, but without the Lanthorn, all your efforts will be in vain.~
+@20=~The sages tell me that you have recovered some of the missing lenses - I congratulate you, but without the Lanthorn and the remaining lenses, all your efforts will be in vain.~
+@21=~The sages tell me that you have recovered the missing lens - I congratulate you, but without the Lanthorn, all your efforts will be in vain.~
+@22=~Remember, too, that three of the Lanthorn's lenses are hidden somewhere in Amn. They, too, must be recovered if we are to prevail against Irenicus.~ 
+@23=~Remember, too, that two of the Lanthorn's lenses are hidden somewhere in Amn. They, too, must be recovered if we are to prevail against Irenicus.~ 
+@24=~Remember, too, that one of the Lanthorn's lenses is hidden somewhere in Amn. It, too, must be recovered if we are to prevail against Irenicus.~ 
+@25=~Demin the high priestess, she will tell you. But we will have to breach the city to find her.~
+@26=~Unfortunately, our fears are confirmed - some of the Lanthorn's lenses have been removed, and without them, its magic cannot pierce the veil that Irenicus has placed around Suldenesselar. Redouble your efforts, <CHARNAME> - we must have those lenses. Return to me as soon as you have found them.~
+@27=~Unfortunately, our fears are confirmed - one of the Lanthorn's lenses has been removed, and without that lens, its magic cannot pierce the veil that Irenicus has placed around Suldenesselar. Redouble your efforts, <CHARNAME> - we must have that lens. Return to me as soon as you have found it.~
+@28=~Fortunately, I see that you have recovered the lost lens. With it restored, the Lanthorn is complete - and my sages have instructed me in its use.~
+@29=~Fortunately, I see that you have recovered the lost lenses. With these restored, the Lanthorn is complete - and my sages have instructed me in its use.~
+@30=~You return once again. The drow have grown restive, though we have defeated every war party they have sent against us. But Suldanesselar remains lost to us, and with each night my fear grows for its people.~
+@31=~You have the lens we need! Quickly, <CHARNAME>, give it to me - the sages have told me how to repair the Lanthorn, and how to use it.~
+@32=~You have the lenses we need! Quickly, <CHARNAME>, give them to me - the sages have told me how to repair the Lanthorn, and how to use it.~
+@33=~And yet, my sages tell me that you have not recovered the lenses we seek. Make haste - the plight of the elves grows worse with each passing day.~
+@34=~And yet, my sages tell me that you have not recovered the lens we seek. Make haste - the plight of the elves grows worse with each passing day.~
+
+@35=~It lies beneath the streets, in the prison of a long-dead mage of Netheril, bound down the ages by sacrifice. Yet only if he is awakened can the lens be freed.~
+@36=~Among the bustle of a human city, consumed by ambition and the fear of death, she serves a twisted lich. But neither know the value of the treasure she holds.~
+@37=~Amidst piety, the Slave Lords weave their web; their servants bring them many trinkets, and they know not the value of this one.~
+@38=~An old enemy holds the key, but the door is beneath the streets. The monster that dwells there wraps its tentacles unknowing around the prize.~
+
+@120=~The elven city requires my aid
+
+Although I have retrieved the Rhyn Lanthorn from Bodhi, it is useless without the lenses that she removed. I must follow the sages' clues, find them, and return them to Elhan if I am to reach Suldanesselar.~
+@121=~The elven city requires my aid
+
+Although I have retrieved the Rhyn Lanthorn from Bodhi, it is useless without the lens that she removed. I must follow the sages' clue, find it, and return it to Elhan if I am to reach Suldanesselar.~
+@122=~The elven city requires my aid
+
+I have found a lens from the Rhyn Lanthorn - Bodhi must have hidden it here when she stole the Lanthorn from the elven temple.~
+@135=~The elven city requires my aid
+
+"It lies beneath the streets, in the prison of a long-dead mage of Netheril, bound down the ages by sacrifice. Yet only if he is awakened can the lens be freed."~
+@136=~The elven city requires my aid
+
+"Among the bustle of a human city, consumed by ambition and the fear of death, she serves a twisted lich. But neither know the value of the treasure she holds."~
+
+@137=~The elven city requires my aid
+
+"Hidden amidst piety, the Slave Lords weave their web; their servants bring them many trinkets, and they know not the value of this one."~
+@138=~The elven city requires my aid
+
+"An old enemy holds the key, but the door is beneath the streets. The monster that dwells there wraps its tentacles unknowing around the prize."~

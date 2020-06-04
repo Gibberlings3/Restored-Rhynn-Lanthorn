@@ -1,0 +1,245 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+
+<head>
+    <title>Restored Rhynn Lanthorn Quest</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+    <link rel="stylesheet" href="style/g3readme_cam_022916_dwedit.css" type="text/css" />
+    <link href="style/g3icon.ico" rel="icon" type="image/bmp" />
+</head>
+
+<body>
+    <div id="container">
+        <div class="ribbon_menu">
+            <ul>
+                <li><a href="#over">Overview</a></li>
+                <li><a href="#compatibility">Compatibility</a></li>
+                <li><a href="#install">Installation</a></li>
+                <li><a href="#content">Detailed content</a></li>
+                <li><a href="#technical">Technical notes</a></li>
+                <li><a href="#acknow">Acknowledgements</a></li>
+                <li><a href="#copy">Copyright info</a></li>
+                <li><a href="#version">History</a></li>
+            </ul>
+            <span>
+                <!--<img src="style/logo.gif" width="305" height="83" alt="G3" />--></span>
+        </div>
+        <div class="ribbon_bubble">
+            <div class="ribbon_rectangle">
+                <h1>Restored Rhynn Lanthorn Quest</h1>
+            </div>
+
+            <div class="ribbon_triangle-l"></div>
+            <div class="ribbon_triangle-r"></div>
+            <div class="section">
+                <!--<p><strong><a href="http://www.gibberlings3.net/">A Gibberlings Three Mod</a><br /></strong>-->
+                Author: </strong>
+                <a href="https://www.gibberlings3.net/profile/1067-davidw/">DavidW</a>
+                <!--</p>-->
+                <p>
+                    <strong>Version: beta 1</a></strong><br />
+                    <strong>Languages: </strong>English<br />
+                    <strong>Platforms: </strong>Windows, Linux, macOS
+                </p>
+            </div>
+            <div class="ribbon_rectangle_h2">
+                <h2><a name="over" id="over"></a>Overview</h2>
+            </div>
+
+            <div class="ribbon_triangle_h2-l"></div>
+            <div class="ribbon_triangle_h2-r"></div>
+            <div class="section">
+                <p>
+                    The beta version of Baldur's Gate II contained a mechanic to expand Chapter 6 (the one where you are looking
+					for the Rhynn Lanthorn). As well as the Lanthorn itself, the thief would have stolen several lenses and hidden them in
+					areas around the game. The player would be given clues to where the lenses were, and would have to retrieve
+					them before the Lanthorn could be used to enter Chapter 7. The lenses were actually placed in several of the 
+					stronghold quests that the player can explore in Chapter 2 (and if the player had already done all of those quests,
+					no lenses would be placed). The idea, presumably, was to introduce a mechanic to bind the stronghold quests into the
+					main plot of Chapter 6, just as the need to gather gold binds them into the main plot of Chapter 2.
+                </p>
+				<p>This expanded Rhynn Lanthorn quest was removed from Baldur's Gate II before release (at a guess, because the clues leading to the lenses were a bit too gnomic for casual players, and there wasn't time to fill in the details.) But almost all the machinery of the quest is still present in the game - the scripts that place the lenses, the lenses themselves, and even the dialog lines that give the clues to where the lenses were. That makes it possible to reconstruct almost exactly how the quest worked.
+				</p>
+				<p>This mod simply restores the quest. There are two options. The first ('classic') is almost an exact restoration of how the original version of the quest would have gone. The second ('expanded') increases the number of locations in 
+				which lenses may be found, to include four extra side-quest regions in the original game not tied to a stronghold quest. You can also customise the installation (via the 'dw_lanthorn.ini' file in the mod folder) to deselect any possible lens location you don't want to use.
+				</p>
+
+            </div>
+            <div class="ribbon_rectangle_h2">
+                <h2><a name="compat" id="compat"></a>Compatibility</h2>
+            </div>
+            <div class="ribbon_triangle_h2-l"></div>
+            <div class="ribbon_triangle_h2-r"></div>
+
+            <div class="section">
+                <p>
+                    Restored Rhynn Lanthorn Quest should be compatible with both the original and Enhanced-Edition versions of Throne of Bhaal, as well as the Baldur's Gate Trilogy and Enhanced Edition Trilogy (although my testing of the mod was exclusively on the Enhanced Edition). 
+                </p>
+                <p>
+                    Restored Rhynn Lanthorn Quest should be compatible with pretty much any other mod: mostly, it just reactivates code already in the game. There is some prospect of conflict either with a mod that edits Elhan's chapter 6 dialog, or one that allows you to skip the Underdark Exit map at the end of chapter 5; to the best of my knowledge, though, there are no actual problems like this caused by any mod.
+                </p>
+				<p>(There is an obvious conceptual incompatibility with the component of the 'Oversight' mod that <em>also</em> restores the missing-lens quest. Oddly enough, there probably isn't a technical incompatibility: Oversight's version is not so much a restoration as a new quest inspired by the original quest, and I don't think any of the code clashes. Even so, it would be silly to play them together.)
+				</p>
+                <p>
+                    It shouldn't really matter where in your install order you choose to install this mod.
+                </p>
+                <p>
+            </div>
+            <div class="ribbon_rectangle_h2">
+                <h2><a name="install" id="install"></a>Installation</h2>
+            </div>
+            <div class="ribbon_triangle_h2-l"></div>
+            <div class="ribbon_triangle_h2-r"></div>
+
+
+            <div class="section">
+                <p>
+                    <strong>Windows</strong><br />
+                    Restored Rhynn Lanthorn Quest mod is distributed as a self-extracting archive and includes a WeiDU installer. To install,
+                    simply double-click the archive and follow the instructions on screen.
+                </p>
+                <p>
+                    Alternatively, the files can be extracted into your game directory using
+                    <a href="http://www.7-zip.org/download.html">7zip</a> or <a
+                        href="http://www.rarlab.com/download.htm">WinRAR</a>.
+                    When properly extracted, your game directory will contain <strong>setup-dw_lanthorn.exe</strong> and
+                    the folder
+                    <strong>dw_lanthorn</strong>. To install, double-click <strong>setup-dw_lanthorn.exe</strong> and follow
+                    the instructions on screen.
+                </p>
+                <p>
+                    You can run <strong>setup-dw_lanthorn.exe</strong> in your game folder to reinstall, uninstall or
+                    otherwise change components.</p>
+                <p>
+                    <strong>macOS</strong><br />
+                    Restored Rhynn Lanthorn Quest for macOS is distributed as a compressed tarball and includes a WeiDU installer.</p>
+                <p>
+                    First, extract the files from the tarball into your game directory. When properly extracted, your
+                    game directory will contain <strong>setup-dw_lanthorn</strong>,
+                    <strong>setup-dw_lanthorn.command</strong>, and the folder <strong>dw_lanthorn</strong>. To install,
+                    double-click <strong>setup-dw_lanthorn.command</strong> and follow the instructions on screen.</p>
+                <p>
+                    You can run <strong>setup-dw_lanthorn.command</strong> in your game folder to reinstall, uninstall or
+                    otherwise change components.
+                </p>
+                <p><strong>Linux</strong><br />
+                    Restored Rhynn Lanthorn Quest for Linux is distributed as a compressed tarball and does not include a WeiDU installer.
+                </p>
+                <p>Extract the contents of the mod to the folder of the game you wish to modify.</p>
+                <p>
+                    Download the latest version of WeiDU for Linux from <a
+                        href="http://www.weidu.org/%7Ethebigg/">WeiDU.org</a> and copy WeiDU and WeInstall to /usr/bin.
+                    Following that, open a terminal, cd to your game installation directory, run tolower and answer Y to
+                    both queries. You can avoid running the second option (linux.ini) if you've already ran it once in
+                    the same directory. To save time, the archive is already tolowered, so there's no need to run the
+                    first option (lowercasing file names) either if you've extracted only this mod since the last time
+                    you lowercased file names. If you're unsure, running tolower and choosing both options is the safe
+                    bet.
+                </p>
+                <p>To install, run WeInstall dw_lanthorn in your game folder. Then run wine BGMain.exe and start playing.
+                </p>
+                <p>
+                    <strong>Note for Complete Uninstallation</strong><br />
+                    In addition to the methods above for removing individual components, you can completely uninstall
+                    the mod using setup-dw_lanthorn --uninstall at the command line to remove all components without
+                    wading through prompts.
+                </p>
+            </div>
+
+            <div class="ribbon_rectangle_h2">
+                <h2><a name="content" id="content"></a>Detailed Contents</h2>
+            </div>
+            <div class="ribbon_triangle_h2-l"></div>
+            <div class="ribbon_triangle_h2-r"></div>
+            <div class="section">
+			<p>In the classic version of the quest, there are seven possible creatures who can have the lenses:
+			<ul>
+			<li>The Shade Lord</li>
+			<li>Mekrath, the mage holding Haer'Dalis prisoner</li>
+			<li>Mae'var, the shadow thief guildmaster</li>
+			<li>Samia, the treasure hunter in the Windspear Hills dungeon</li>
+			<li>Torgal the troll</li>
+			<li>The Unseeing Eye</li>
+			<li>A troll in the Troll Mound, near the Druid Grove</li>
+			</ul>
+			These correspond to seven of the eight stronghold quests (I assume that the eighth, the mage quest, was omitted because it occurs on another plane and Bodhi could not plausibly hide the lens in it.) The expanded version adds four more possibilities:
+			<ul>
+			<li>Kangaxx the demilich</li>
+			<li>Layene, the mage in the Twisted Rune lair</li>
+			<li>The Alhoon in the mind flayer hideout in the sewers</li>
+			<li>Koshi, the kensai in the Guarded Compound of the Temple District</li>
+			</ul>
+			Up to three lenses are assigned to creatures whom you have not yet dealt with: if you have dealt with all of them, no lenses will be assigned, if you have dealt with all but one, only one lens will be assigned, etc. In the original version, the lenses were assigned in the order of priority in which I list them above. My version instead assigns them at random (this is the only content change I have made from the original version). </p>
+			<p>When you talk to Elhan, his sages will give you a short and cryptic clue to the locations of each lens. (For the first seven locations, these clues can be recovered from unused strings in the game; the ones for the new locations are added.)</p>
+			<p>If you want to disable one or more locations (say, if you are using a mod which makes it impossible to kill Mae'var, or if you just don't like the Unseeing Eye quest and want to skip it), you can do so by editing dw_lanthorn.ini in Notepad or another text editor. Set the value of 'skip_<location>' to 1. Those locations will be silently skipped when the lenses are allocated. You need to make these modifications before installing the mod.</p>
+			<p>By default (i.e., this was the value in the original quest) each party member receives 45,000 xp for retrieving each lens. If you think that's a bit over-generous, you can reduce it (or eliminate it entirely) by editing the lens_xp entry in dw_lanthorn.ini. Again, this needs to be done before installing the mod.</p>
+
+            </div>
+           <div class="ribbon_rectangle_h2">
+                <h2><a name="technical" id="technical"></a>Technical Notes</h2>
+			</div>
+            <div class="ribbon_triangle_h2-l"></div>
+            <div class="ribbon_triangle_h2-r"></div>
+            <div class="section">
+			<p>These are aimed at modders and anyone else interested in coding issues and in how the quest was restored; they're not relevant to players.</p>
+			<p>
+			The original version of the quest worked like this:
+			<ol>
+			<li>The area script for the 7 possible lens-bearers would increment the 'LensPlot' global by one if the creature was killed (or, in Mekrath's case, dealt with non-violently).</li>
+			<li>Elhan's chapter 6 dialog would allocate up to three locations for the lenses, by giving the player the clue and by setting a variable with a name like 'PlayerToldOfTorgal'.</li>
+			<li>The area script for each lens-bearer (or in one or two cases, the creature's script) would then create the lens if that variable was set, as well as awarding some quest XP if the lens was recovered.</li>
+			<li>Elhan's chapter 6 dialog would also check for the return of the lenses, as well as the Lanthorn itself, before letting the party into chapter 7.</li>
+			</ol>
+			</p>
+			<p>The area script parts are still in the game, as is the lens file itself (c6lens.itm - there are also unused 'first lens', 'second lens' and 'third lens' files, which I think refer to a different implementation of the quest). The only bit not live is is Elhan's dialog - but in fact, that too is in the game files, just unused. In fact, it's there in four versions - c6elhan.dlg, c6elhan1.dlg, xc6elxxx.dlg, and c6fake.dlg. If you look at those files in an editor, they look like nonsense, because most of the actual strrefs have been removed from dialog.tlk and replaced by new ones. But the logical structure of the dlg file is still there, and so are the journal entries (and, actually, a few of the dialog lines), so that it's possible to reconstruct almost exactly what used to be there.
+			</p>
+			<p>So: restoring the quest mostly just means restoring the cut content to Elhan's dialog file. That requires a little creativity, as new lines have to be added to explain the missing lenses the new structure of that dialog file is radically changed (for instance, Elhan's sages didn't seem to be present in person originally; since they're here in the current version, it makes sense for the sages to speak their clues themselves rather than have Elhan dictate them). But at the mechanical level, all the dialog has to do is turn on the variables and then the rest of the content is all present in existing scripts.</p>
+			<p>I did take one liberty with the original: assigning the lens locations at random rather than in a preset order. It's impractical to do that inside a dialog (at least, not without a lot of extraneous dialog lines) so I do it in a script instead - I piggyback on the area script for the underdark exit area, ar2401. By the time you exit that area, the requisite number of lenses should have been assigned.</p>
+			<p>The code is very modular, so that if someone wanted to add another area they could easily do so. Each location corresponds to a line in data.2da. Other than that line, all that is needed is a couple of dialog strings and a small bit of script (in script_add) that actually creates the lens.</p>
+			</div>
+
+
+            
+            <div class="ribbon_rectangle_h2">
+                <h2><a name="acknow" id="acknow"></a>Acknowledgements</h2>
+            </div>
+            <div class="ribbon_triangle_h2-l"></div>
+            <div class="ribbon_triangle_h2-r"></div>
+            <div class="section">
+                <p>
+                    As always, thanks to those who created the tools that made the modern Infinity Engine modding scene
+                    possible: in particular, Westley Weimer, for the original WeiDU; TheBigg and Wisp for developing it
+                    into the remarkable tool it now is; the various contributors to Near Infinity, which grows more powerful with every iteration.
+                </p>
+				<p>Thanks to Kish for the idea to use the Star Sapphire as the source of BAM files for the lenses.</p>
+            </div>
+            <div class="ribbon_rectangle_h2">
+                <h2><a name="copy" id="copy"></a>Copyright Information</h2>
+            </div>
+            <div class="ribbon_triangle_h2-l"></div>
+            <div class="ribbon_triangle_h2-r"></div>
+            <div class="section">
+  <p>Restored Rhynn Lanthorn Quest is &copy;2020-Present, David
+    Wallace - insofar as it even makes sense to copyright a mod that mostly just reactivates content already in the game.</p>
+  <p>Since in practice I'm obviously not going to sue anyone, I'll use this section to say what I'd <b>like</b> people's attitude to re-using and redistributing my mods. Basically, I don't mind
+  what you do with the code provided you (a) give me full credit when you borrow or re-use my code in your own mod, and (b) don't actually mirror this mod (or any modified version of this mod) somewhere else.</p>
+
+            </div>
+            <div class="ribbon_rectangle_h2">
+                <h2><a name="version" id="version"></a>Version History</h2>
+            </div>
+
+            <div class="ribbon_triangle_h2-l"></div>
+            <div class="ribbon_triangle_h2-r"></div>
+            <div class="section">
+                <p>
+                    <b>Version beta 1 </b>(June 2020)
+				</p>
+					<p>
+					Original release.
+                </p>
+         </div>
+    </div>
+</body>
+
+</html>
