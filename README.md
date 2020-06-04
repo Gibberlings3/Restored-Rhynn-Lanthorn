@@ -1,4 +1,4 @@
-# Restored-Rhynn-Lanthorn
+# Restored Rhynn Lanthorn Quest
 
 This is a small mod that restores the original extended quest for the Rhynn Lanthorn, which was present in the beta version of Baldur's Gate II but was cut before release. Almost all the files are still in the game, so that it can be restored very faithfully.
 
