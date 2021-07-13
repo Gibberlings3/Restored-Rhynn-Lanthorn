@@ -21,7 +21,7 @@ OUTER_SPRINT workspace "%external_loc%/workspace"
 MKDIR "%workspace%"
 OUTER_SPRINT marker_loc "%external_loc%/markers"
 MKDIR "%marker_loc%"
-OUTER_SPRINT data_loc "%external_loc%/data/ascension"
+OUTER_SPRINT data_loc "%external_loc%/data/%MOD_FOLDER%"
 MKDIR "%data_loc%"
 
 OUTER_SPRINT percentage "%"

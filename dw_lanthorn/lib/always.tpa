@@ -1,6 +1,6 @@
 
 	OUTER_SPRINT ini_file dw_lanthorn.ini
-        OUTER_SPRINT MOD_VERSION @0
+        
 
         // include function libraries (note that 'sfo_lite' also builds and sets a few SFO files/variables)
         // WoP uses the Ascension function libraries, for ease of transfer of the 'Redeemable Balthazar' content
@@ -26,46 +26,7 @@
     VERBOSE
 
 
-        // read in resource-id data
 
-	/*
-        ACTION_BASH_FOR "%MOD_FOLDER%/lib/resource_id" ".*\.2da" BEGIN
-          COPY "%BASH_FOR_FILESPEC%" "%workspace%"
-              REPLACE_TEXTUALLY "//.*" ""
-	      COUNT_2DA_ROWS 2 rowcount
-	      FOR (i=1;i<rowcount;i+=1) BEGIN
-	         READ_2DA_ENTRY i 0 2 name
-	         READ_2DA_ENTRY i 1 2 resref
-	         SPRINT array_id "%BASH_FOR_RES%_id"
-	         SPRINT $%array_id%("%name%") "%resref%"
-	         PATCH_IF VARIABLE_IS_SET "%name%" BEGIN
-	            SPRINT oldval EVAL "%%name%%"
-	            PATCH_WARN "Duplicate variable %name% is already set to %oldval%"
-	         END
-	         PATCH_IF VARIABLE_IS_SET $has_been_used("%BASH_FOR_RES%" "%resref%") && !("%resref%" STRING_MATCHES_REGEXP ".*[a-z].*") BEGIN
-	             PATCH_WARN "resref %resref% is used more than once in file %BASH_FOR_FILESPEC%"
-	         END ELSE BEGIN
-	             SPRINT $has_been_used("%BASH_FOR_RES%" "%resref%") ""
-	         END
-	         SPRINT "%name%" "%resref%"    
-	         // specifically for dialogs, build them
-	         PATCH_MATCH "%BASH_FOR_RES%" WITH
-	         dialogs BEGIN
-	            PATCH_IF !FILE_EXISTS_IN_GAME "%resref%.dlg" BEGIN
-	               INNER_ACTION BEGIN
-	                  LAF make_dialog STR_VAR dialog="%resref%" END
-	               END
-	            END
-	         END
-	         DEFAULT
-
-	         END
-	      END
-	  BUT_ONLY
-        END
-		
-		
-		*/
 
 
 
