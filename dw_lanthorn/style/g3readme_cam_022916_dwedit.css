@@ -199,6 +199,18 @@ div#container {
   border-left: 4px solid #ccc;
   border-top: 1px dotted #ccc;
   }
+.spell_description, .spell_description_cleric, .spell_description_druid {
+  position: relative;
+  display: block;
+  background-color: #ddd;
+  border-left: 4px solid #bbb;
+  border-top: 1px dotted #bbb;
+  padding:10px;
+  margin:20px;
+  }
+.spell_description_druid {border-color:#005a13;background-color:#ccded0;}
+.spell_description_cleric {border-color:#000676;background-color:#cccde4;}
+
 .portrait_thumb {
   float: left;
   width: 125px;
