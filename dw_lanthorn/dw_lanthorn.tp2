@@ -1,6 +1,6 @@
 BACKUP ~weidu_external/backup/dw_lanthorn~
-SUPPORT ~Gibberlings 3 forums, www.gibberlings3.net/forums~
-VERSION ~v beta 1~
+SUPPORT ~The Gibberlings Three Forums, www.gibberlings3.net/forums~
+VERSION ~Beta 3~
 README ~dw_lanthorn/readme-dw_lanthorn.html~
 AUTO_EVAL_STRINGS
 
@@ -20,10 +20,8 @@ LANGUAGE
 LANGUAGE
 ~Russian~ 
 ~russian~
+ ~dw_lanthorn/lang/english/setup.tra~
  ~dw_lanthorn/lang/russian/setup.tra~
-
-
-//BEGIN "test" DESIGNATED 0
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
