@@ -1,6 +1,6 @@
 BACKUP ~weidu_external/backup/dw_lanthorn~
 SUPPORT ~Gibberlings 3 forums, www.gibberlings3.net/forums~
-VERSION ~v2~
+VERSION ~v beta 1~
 README ~dw_lanthorn/readme-dw_lanthorn.html~
 AUTO_EVAL_STRINGS
 
@@ -10,10 +10,17 @@ ALWAYS
    INCLUDE "dw_lanthorn/lib/always.tpa"
 END
 
+AUTO_TRA ~dw_lanthorn/lang/%s~
+
 LANGUAGE
-"English" 
-"english"
+~English~ 
+~english~
  ~dw_lanthorn/lang/english/setup.tra~
+
+LANGUAGE
+~Russian~ 
+~russian~
+ ~dw_lanthorn/lang/russian/setup.tra~
 
 
 //BEGIN "test" DESIGNATED 0
