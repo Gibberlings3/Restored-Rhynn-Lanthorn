@@ -23,6 +23,12 @@ LANGUAGE
  ~dw_lanthorn/lang/english/setup.tra~
  ~dw_lanthorn/lang/russian/setup.tra~
 
+LANGUAGE
+~Spanish by XsidoGamer~ 
+~spanish~
+ ~dw_lanthorn/lang/english/setup.tra~
+ ~dw_lanthorn/lang/spanish/setup.tra~
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
 BEGIN @4 DESIGNATED 10 SUBCOMPONENT @1// Restored Rhynn Lanthorn lens quest - classic version
