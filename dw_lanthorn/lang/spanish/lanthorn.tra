@@ -1,0 +1,78 @@
+@1=~Nuestros sabios han encontrado indicios del Farol en varios lugares de las tierras humanas. Sospechamos que el ladrón ha desmontado el artefacto y ocultado sus lentes. Pero en cuanto a ese ladrón, los sabios no han podido adivinar adónde fue, a pesar de sus mejores esfuerzos.~
+
+@2=~Nuestros sabios han encontrado un rastro del Farol en tierras humanas, pero la firma mágica es débil. Sospechamos que el ladrón ha retirado una lente del Farol y la ha ocultado. Pero en cuanto a ese ladrón, los sabios no han podido adivinar adónde fue, a pesar de sus mejores esfuerzos.~
+
+@3=~En cualquier caso, está claro que nuestros peores temores se han confirmado y que el Farol ya no se encuentra en territorio élfico.~
+
+
+// FOR TRANSLATORS: these strings are taken almost verbatim from strings 57946, 57948, 57949, 57950, 57951, 57952, 57954
+
+@4=~Un cristal de origen élfico se halla entre los servidores de la naturaleza, en las garras de las bestias que mueren ante el fuego.~
+@5=~Bajo las calles de una ciudad humana, dentro del reino de los ciegos, la bestia no ve lo que posee incluso ahora.~
+@6=~Oculto durante mucho tiempo con el pasado de una familia, abandonado sin intención cuando se sellaron los horrores de abajo. Desenterrado por invasores, trol y excavador, no saben lo que poseen.~
+@7=~En la guarida de un wyrm carmesí, pero no como una baratija del tesoro; una mentirosa señala el camino hacia la riqueza, aunque no sabe qué es lo que sostiene.~
+@8=~Un traidor entre los ladrones busca alcanzar el liderazgo de un gremio renovado, sin saber el premio que posee.~
+@9=~Carcelero de la tiefling, no sabe lo que tiene. En el camino de los juglares y trovadores yace un premio dentro del altar.~
+@10=~En las garras de una bestia de sombra, entre las ruinas de la luz cerca de brujas y colinas. El cristal es una curiosidad, pero él desconoce su poder.~
+
+// FOR TRANSLATORS: strings @11, @13 and @15 are adapted from Elhan's side comments in strings 55060, 55061, 55062
+
+@11=~No podemos ser más específicos que esto.~
+@12=~Sabio, dile a <CHARNAME> la segunda de las adivinaciones.~
+@13=~Espero que esto tenga algún significado para ti, <CHARNAME>.~
+@14=~Sabio, pronuncia la última adivinación.~
+@15=~Lamento que sea tan confuso, pero creo que los sabios tienen la costumbre de serlo a propósito.~
+
+@16=~Y aún queda el asunto de la lente desaparecida. Aquí sabemos un poco, gracias a las adivinaciones de los sabios. Pero nuestro consejo es críptico, como siempre lo son tales visiones. Sabio, dile a <CHARNAME> lo que habéis descubierto.~
+
+@17=~Y aún queda el asunto de las lentes desaparecidas. Aquí sabemos un poco, gracias a las adivinaciones de los sabios. Pero nuestro consejo es críptico, como siempre lo son tales visiones. Sabio, dile a <CHARNAME> lo que habéis descubierto sobre la primera lente.~
+@18=~Eso es todo lo que hemos averiguado. No podemos intervenir en tierras humanas; <CHARNAME>, debemos confiar también en ti para esto.~
+@19=~Los sabios me dicen que has recuperado todas las lentes desaparecidas. Te felicito, pero sin el Farol, todos tus esfuerzos serán en vano.~
+@20=~Los sabios me dicen que has recuperado algunas de las lentes desaparecidas. Te felicito, pero sin el Farol y las lentes restantes, todos tus esfuerzos serán en vano.~
+@21=~Los sabios me dicen que has recuperado la lente desaparecida. Te felicito, pero sin el Farol, todos tus esfuerzos serán en vano.~
+@22=~Recuerda también que tres de las lentes del Farol están ocultas en algún lugar de Amn. También deben recuperarse si queremos prevalecer contra Irenicus.~
+@23=~Recuerda también que dos de las lentes del Farol están ocultas en algún lugar de Amn. También deben recuperarse si queremos prevalecer contra Irenicus.~
+@24=~Recuerda también que una de las lentes del Farol está oculta en algún lugar de Amn. También debe recuperarse si queremos prevalecer contra Irenicus.~
+@25=~Demin, la gran sacerdotisa; ella te lo dirá. Pero tendremos que penetrar en la ciudad para encontrarla.~
+@26=~Por desgracia, nuestros temores se confirman: algunas de las lentes del Farol han sido retiradas y, sin ellas, su magia no puede atravesar el velo que Irenicus ha colocado alrededor de Suldanesselar. Redobla tus esfuerzos, <CHARNAME>; necesitamos esas lentes. Regresa a verme en cuanto las hayas encontrado.~
+@27=~Por desgracia, nuestros temores se confirman: una de las lentes del Farol ha sido retirada y, sin ella, su magia no puede atravesar el velo que Irenicus ha colocado alrededor de Suldanesselar. Redobla tus esfuerzos, <CHARNAME>; necesitamos esa lente. Regresa a verme en cuanto la hayas encontrado.~
+@28=~Afortunadamente veo que has recuperado la lente perdida. Con ella restaurada, el Farol está completo, y mis sabios me han instruido en su uso.~
+@29=~Afortunadamente veo que has recuperado las lentes perdidas. Con ellas restauradas, el Farol está completo, y mis sabios me han instruido en su uso.~
+@30=~Has regresado una vez más. Los drow se han vuelto inquietos, aunque hemos derrotado a todas las partidas de guerra que han enviado contra nosotros. Pero Suldanesselar sigue perdida para nosotros, y cada noche temo más por su pueblo.~
+@31=~¡Tienes la lente que necesitamos! Rápido, <CHARNAME>, dámela: los sabios me han explicado cómo reparar el Farol y cómo usarlo.~
+@32=~¡Tienes las lentes que necesitamos! Rápido, <CHARNAME>, dámelas: los sabios me han explicado cómo reparar el Farol y cómo usarlo.~
+@33=~Y sin embargo, mis sabios me dicen que aún no has recuperado las lentes que buscamos. Date prisa: la situación de los elfos empeora con cada día que pasa.~
+@34=~Y sin embargo, mis sabios me dicen que aún no has recuperado la lente que buscamos. Date prisa: la situación de los elfos empeora con cada día que pasa.~
+
+@35=~Se encuentra bajo las calles, en la prisión de un mago de Netheril muerto hace mucho tiempo, atado a través de los siglos mediante sacrificio. Pero solo si es despertado podrá liberarse la lente.~
+@36=~Entre el bullicio de una ciudad humana, consumida por la ambición y el miedo a la muerte, ella sirve a un retorcido lich. Pero ninguno de los dos conoce el valor del tesoro que posee.~
+@37=~Entre la devoción, los Señores Esclavistas tejen su red; sus sirvientes les traen muchas baratijas, y desconocen el valor de esta.~
+@38=~Un viejo enemigo posee la llave, pero la puerta está bajo las calles. El monstruo que habita allí enrosca sus tentáculos alrededor del premio sin saberlo.~
+
+@120=~La ciudad élfica requiere mi ayuda
+
+Aunque he recuperado el Farol de Rhynn de manos de Bodhi, es inútil sin las lentes que ella retiró. Debo seguir las pistas de los sabios, encontrarlas y devolvérselas a Elhan si quiero llegar a Suldanesselar.~
+
+@121=~La ciudad élfica requiere mi ayuda
+
+Aunque he recuperado el Farol de Rhynn de manos de Bodhi, es inútil sin la lente que ella retiró. Debo seguir la pista de los sabios, encontrarla y devolvérsela a Elhan si quiero llegar a Suldanesselar.~
+
+@122=~La ciudad élfica requiere mi ayuda
+
+He encontrado una lente del Farol de Rhynn. Bodhi debió ocultarla aquí cuando robó el Farol del templo élfico.~
+
+@135=~La ciudad élfica requiere mi ayuda
+
+"Se encuentra bajo las calles, en la prisión de un mago de Netheril muerto hace mucho tiempo, atado a través de los siglos mediante sacrificio. Pero solo si es despertado podrá liberarse la lente."~
+
+@136=~La ciudad élfica requiere mi ayuda
+
+"Entre el bullicio de una ciudad humana, consumida por la ambición y el miedo a la muerte, ella sirve a un retorcido lich. Pero ninguno de los dos conoce el valor del tesoro que posee."~
+
+@137=~La ciudad élfica requiere mi ayuda
+
+"Oculto entre la devoción, los Señores Esclavistas tejen su red; sus sirvientes les traen muchas baratijas, y desconocen el valor de esta."~
+
+@138=~La ciudad élfica requiere mi ayuda
+
+"Un viejo enemigo posee la llave, pero la puerta está bajo las calles. El monstruo que habita allí enrosca sus tentáculos alrededor del premio sin saberlo."~
