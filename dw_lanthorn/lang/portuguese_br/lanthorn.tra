@@ -1,0 +1,73 @@
+@1=~Nossos sábios acharam sinais da Lanterna em vários lugares nas terras humanas. Nós suspeitamos que o ladrão desmontou o artefato e escondeu suas lentes. Mas quanto a esse ladrão os sábios não foram capazes de advinhar aonde ele foi a despeito dos melhores esforços deles.~
+
+@2=~Nossos sábios acharam um rastro da Lanterna nas terras humanas mas a assinatura mágica está fraca. Nós suspeitamos que o ladrão removeu uma lente da Lanterna e a escondeu. Mas quanto a esse ladrão os sábios não foram capazes de advinhar aonde ele foi a despeito dos melhores esforços deles.~
+
+@3=~Está claro em qualquer caso que nossos piores medos se confirmaram e que a Lanterna não está mais no território elfo.~
+
+
+// FOR TRANSLATORS: these strings are taken almost verbatim from strings 57946, 57948, 57949, 57950, 57951, 57952, 57954
+
+@4=~Um painel de origem elfa está mantido entre os servos da natureza no domínio das feras que morrem no fogo.~
+@5=~Abaixo das ruas numa cidade humana dentro do reino dos cegos a fera não vê o que ela tem, mesmo agora.~
+@6=~Há muito escondida com o passado de uma família, abandonada sem intenção com o selo dos horrores abaixo. Desenterrada por invasores trolls e escavadores, eles não sabem o que eles tem.~
+@7=~No covil da um wyrm escarlate mas não uma bugiganga no tesouro, um mentiroso aponta o caminho pro tesouro embora ela não conheça aquele que ela mantém.~
+@8=~Um traidor entre os ladrões, ele procura a altura da liderança dentro de uma guilda nova, não conhecendo o prèmio que ele mantém.~
+@9=~Carcereiro do tiefling, ele não sabe o que ele tem. No caminho dos menestréis e trovadores jaz um prêmio dentro do altar.~
+@10=~Nas garras de uma fera das sombras entre as ruínas da luz perto de bruxas e colinas. O painel é uma curiosidade mas ele não conhece seu poder.~
+
+// FOR TRANSLATORS: strings @11, @13 and @15 are adapted from Elhan's side comments in strings 55060, 55061, 55062
+
+@11=~Nós não conseguimos ser mais específicos do que isto.~
+@12=~Sábio, fale pro <CHARNAME> a segunda das advinhações.~
+@13=~Eu espero que isto tenha significado pra você, <CHARNAME>.~
+@14=~Sábio, fala da última advinhação.~
+@15=~Eu lamento que isto não esteja claro mas eu acho que os sábios tem um hábito de serem confusos de propósito.~
+
+
+@16=~E aí permanece o assunto da lente desaparecida. Aqui nós sabemos um pouco através das advinhações dos sábios. Mas nosso conselho é enigmático como tais advinhações sempre são. Sábio - fale pro <CHARNAME> o que você descobriu.~
+@17=~E aí permanece o assunto das lentes desaparecidas. Aqui nós sabemos um pouco, através das advinhações dos sábios. Mas nosso conselho é enigmático como tais advinhações sempre são. Sábio - fale pro <CHARNAME> o que você descobriu da primeira lente.~
+@18=~Isso é tudo que nós descobrimos. Nós não podemos intervir em terras humanas - <CHARNAME>, nós devemos confiar em você para isto também.~
+@19=~Os sábios me dizem que você recuperou todas as lentes desaparecidas - Eu parabenizo você mas sem a Lanterna todos os seus esforços serão em vão.~
+@20=~Os sábios me dizem que você recuperou algumas das lentes desaparecidas - Eu parabenizo você mas sem a Lanterna e as lentes restantes todos os seus esforços serão em vão.~
+@21=~Os sábios me dizem que você recuperou a lente desaparecida - Eu parabenizo você mas sem a Lanterna todos os seus esforços serão em vão.~
+@22=~Lembre-se também que três das lentes da Lanterna estão escondidas em algum lugar em Amn. Elas também devem ser recuperadas se nós vamos prevalecer contra Irenicus.~ 
+@23=~Lembre-se também que duas das lentes da Lanterna estão escondidas em algum lugar em Amn. Elas também devem ser recuperadas se nós vamos prevalecer contra Irenicus.~ 
+@24=~Lembre-se também que uma das lentes da Lanterna está escondida em algum lugar em Amn. Ela também deve ser recuperada se nós vamos prevalecer contra Irenicus.~ 
+@25=~Demin, a sumo sacerdotisa, ela dirá a você. Mas nós teremos que abrir caminho pela cidade pra achá-la.~
+@26=~Infelizmente nossos medos estão confirmados - algumas das lentes da Lanterna foram removidas e sem elas sua mágica não consegue atravessar o véu que Irenicus colocou ao redor de Suldenesselar. Redobre seus esforços, <CHARNAME> - nós devemos ter essas lentes. Retorne a mim tão breve quanto você as tiver achado.~
+@27=~Infelizmente nossos medos estão confirmados - uma das lentes da Lanterna foi removida e sem essa lente sua mágica não consegue atravessar o véu que Irenicus colocou ao redor de Suldenesselar. Redobre seus esforços, <CHARNAME> - nós devemos ter essa lente. Retorne a mim tão breve quanto você a tiver achado.~
+@28=~Felizmente eu vejo que você recuperou a lente perdida. Com ela restaurada a Lanterna está completa - e meus sábios me instruíram no seu uso.~
+@29=~Felizmente eu vejo que você recuperou as lentes perdidas. Com estas restauradas a Lanterna está completa - e meus sábios me instruíram no seu uso.~
+@30=~Você retorna de novo mais uma vez. Os drow ficaram inquietos embora nós tenhamos derrotado cada grupo de guerra que eles enviaram contra nós. Mas Suldanesselar permanece perdida para nós e com cada noite meu medo cresce pelo seu povo.~
+@31=~Você tem as lentes que nós precisamos! Rápido, <CHARNAME>, dê ela para mim - os sábios me disseram como reparar a Lanterna e como usá-la.~
+@32=~Você tem as lentes que nós precisamos! Rápido, <CHARNAME>, dê elas para mim - os sábios me disseram como reparar a Lanterna e como usá-la.~
+@33=~E ainda assim meus sábios me dizem que você não recuperou as lentes que nós procuramos. Apresse-se - o suplício dos elfos fica pior a cada dia que passa.~
+@34=~E ainda assim meus sábios me dizem que você não recuperou a lente que nós procuramos. Apresse-se - o suplício dos elfos fica pior a cada dia que passa.~
+
+@35=~Ela jaz abaixo das ruas na prisão de um mago morto há muito tempo de Netheril, acorrentado através das eras pelo sacrifício. Ainda assim só se ele for despertado as lentes podem ser libertas.~
+@36=~Entre a agitação de uma cidade humana, consumida pela ambição e pelo medo da morte ela serve a um lich perverso. Mas nenhum sabe do valor do tesouro que ela mantém.~
+@37=~Entre a piedade os Senhores dos Escravos tecem a rede deles; os servos deles trazem muitas bugigangas pra eles e eles não sabem do valor desta.~
+@38=~Um velho inimigo mantém a chave mas a porta está abaixo das ruas. O monstro que mora lá envolve seus tentáculos sem saber ao redor do prêmio.~
+
+@120=~A cidade elfa requer meu auxílio
+
+Embora eu tenha recuperado a Lanterna do Rhyn da Bodhi ela é inútil sem as lentes que ela removeu. Eu devo seguir as pistas dos sábios, achá-las e retorná-las pro Elhan se eu devo alcançar Suldanesselar.~
+@121=~A cidade elfa requer meu auxílio
+
+Embora eu tenha recuperado a Lanterna do Rhyn da Bodhi ela é inútil sem a lente que ela removeu. Eu devo seguir a pista dos sábios, achá-la e retorná-la pro Elhan se eu devo alcançar Suldanesselar.~
+@122=~A cidade elfa requer meu auxílio
+
+Eu achei uma lente da Lanterna do Rhyn - A Bodhi deve ter escondido ela aqui quando ela roubou a Lanterna do templo elfo.~
+@135=~A cidade elfa requer meu auxílio
+
+"Ela jaz abaixo das ruas na prisão de um mago morto há muito tempo de Netheril, acorretado através das eras pelo sacrifício. Ainda assim só se ele for despertado as lentes podem ser libertas."~
+@136=~A cidade elfa requer meu auxílio
+
+"Entre a agitação de uma cidade humana, consumida pela ambição e pelo medo da morte ela serve a um lich perverso. Mas nenhum sabe do valor do tesouro que ela mantém."~
+
+@137=~A cidade elfa requer meu auxílio
+
+"Escondidas entre a piedade os Senhores dos Escravos tecem a rede deles; os servos deles trazem muitas bugigangas pra eles e eles não sabem do valor desta."~
+@138=~A cidade elfa requer meu auxílio
+
+"Um velho inimigo mantém a chave mas a porta está abaixo das ruas. O monstro que mora lá envolve seus tentáculos sem saber ao redor do prêmio."~

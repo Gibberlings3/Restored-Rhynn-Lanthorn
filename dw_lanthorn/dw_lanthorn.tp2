@@ -34,6 +34,12 @@ LANGUAGE
 ~german~
  ~dw_lanthorn/lang/english/setup.tra~
  ~dw_lanthorn/lang/german/setup.tra~
+ 
+ LANGUAGE
+~Brazilian Portuguese by Felipefpl~
+~portuguese_br~
+ ~dw_lanthorn/lang/english/setup.tra~
+ ~dw_lanthorn/lang/portuguese_br/setup.tra~
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////
