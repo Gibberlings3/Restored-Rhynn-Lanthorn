@@ -6,7 +6,7 @@ call "%~dp0..\ModPackaging\utilities\ie_games.bat"
 
 REM /* MODIFY: set the values of the 3 variables below to reflect the current mod version */
 set "mod_name=Restored Rhynn Lanthorn Quest"
-set mod_version=Beta_3
+set mod_version=Beta_4
 set mod_folder=dw_lanthorn
 
 REM /* MODIFY: list here which IE games the mod is compatible with, from this list of possibilities: */
