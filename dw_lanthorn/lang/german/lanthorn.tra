@@ -1,0 +1,73 @@
+@1=~Unsere Weisen haben an mehreren Orten Spuren der Lanthorne gefunden. Wir vermuten, dass der Dieb Glasscheiben aus dem Relikt entfernt und versteckt hat.~
+
+@2=~Unsere Weisen haben eine Spur der Lanthorne gefunden. Aber die magische Spur ist schwach. Wir vermuten, dass der Dieb eine Glasscheibe aus dem Relikt entfernt und versteckt hat.~
+
+@3=~Wir waren trotz der größten Anstrengungen unserer Weisen nicht in der Lage herauszufinden, wohin der Dieb gegangen ist. Das lässt mich vermuten, dass sich die Lanthorne nicht mehr im Gebiet der Elfen befindet.~
+
+
+// FOR TRANSLATORS: these strings are taken almost verbatim from strings 57946, 57948, 57949, 57950, 57951, 57952, 57954
+
+@4=~Eine Scheibe elfischen Ursprungs wird bei den Dienern der Natur aufbewahrt, im Griff der Untiere, die durch das Feuer sterben.~
+@5=~Unter den Straßen einer Stadt der Menschen, im Königreich der Blinden, im Besitz eines Untiers, das nicht einmal erkennen kann, über welchen Schatz es verfügt.~
+@6=~Verwahrt mit der Vergangenheit einer Familie, unabsichtlich, gemeinsam mit den Schrecken in den Tiefen versiegelt. Durch die Invasion von Trollen und Gräbern ans Tageslicht gefördert, doch sie wissen nicht, über welchen Schatz sie da verfügen.~
+@7=~In der Lagerstätte des blutroten Wyrms, doch kein Schmuckstück in seinem Hort, zeigt eine Lügnerin den Weg zum Schatz, obwohl sie nicht weiß, über welchen Schatz sie selbst verfügt.~
+@8=~Ein Verräter unter den Dieben will den höchsten Rang in einer Gilde erreichen. Er weiß nicht, über welchen Schatz er verfügt.~
+@9=~Der Kerkermeister des Tieflings weiß nicht, welchen Schatz er besitzt. Auf dem Pfad der Minnesänger und Troubadoure liegt eine Belohnung im Altar.~
+@10=~In den Klauen des Untiers, das aus Schatten geformt ist, in den Ruinen des Lichts in der Nähe von Hexen und Hügeln. Die Scheibe ist merkwürdig, doch kennt er ihre Kräfte nicht.~
+
+// FOR TRANSLATORS: strings @11, @13 and @15 are adapted from Elhan's side comments in strings 55060, 55061, 55062
+
+@11=~Es tut mir leid, aber wir konnten nichts Genaueres herausfinden.~
+@12=~Gelehrter, erzählt <CHARNAME> die zweite der Weissagungen.~
+@13=~Ich hoffe, dass Ihr etwas damit anfangen könnt, <CHARNAME>.~
+@14=~Gelehrter, wie lautet die letzte Weissagung?~
+@15=~Das ist wohl ziemlich unklar. Manchmal habe ich fast den Eindruck, dass die Gelehrten schon aus Prinzip all ihre Auskünfte möglichst kryptisch formulieren.~
+
+
+@16=~Aber da bleibt noch die Sache mit der fehlenden Glasscheibe. Hier wissen wir ein wenig, durch die Weissagungen der Gelehrten. Erzählt <CHARNAME>, was ihr über die Glasscheibe erfahren konntest.~
+@17=~Aber da bleibt noch die Sache mit den fehlenden Glasscheiben. Hier wissen wir ein wenig, durch die Weissagungen der Gelehrten. Erzählt <CHARNAME>, was ihr über die erste Glasscheibe erfahren konntest.~
+@18=~Das ist alles, was wir in Erfahrung bringen konnten. Wir können uns nicht in menschliches Territorium begeben und müssen uns auch hier wieder auf Euch verlassen.~
+@19=~Die Weisen sagen mir, dass Ihr alle fehlenden Glasscheiben wiedergefunden habt. Ich gratuliere Euch, aber ohne die Lanthorne werden all Eure Bemühungen umsonst sein.~
+@20=~Die Weisen sagen mir, dass Ihr einige der fehlenden Glasscheiben wiedergefunden hast. Ich gratuliere Euch, aber ohne die Lanthorne und die restlichen Glasscheiben werden all Eure Bemühungen umsonst sein.~
+@21=~Die Weisen sagen mir, dass Ihr die fehlende Glasscheibe wiedergefunden hast. Ich gratuliere Euch, aber ohne die Lanthorne werden all Eure Bemühungen umsonst sein.~
+@22=~Denkt auch daran, dass drei Glasscheiben der Lanthorne irgendwo in Amn versteckt sind. Auch sie müssen wiedergefunden werden, wenn wir gegen Irenicus siegen wollen.~
+@23=~Denkt auch daran, dass zwei Glasscheiben der Lanthorne irgendwo in Amn versteckt sind. Auch sie müssen wiedergefunden werden, wenn wir gegen Irenicus siegen wollen.~
+@24=~Denkt auch daran, dass eine Glasscheibe der Lanthorne irgendwo in Amn versteckt ist. Auch sie muss wiedergefunden werden, wenn wir gegen Irenicus siegen wollen.~
+@25=~Die Hohepriesterin Demin wird es Euch erzählen. Wir müssen in die Stadt durchbrechen, um sie zu finden.~
+@26=~Leider bestätigen sich unsere Befürchtungen: Einige Glasscheiben wurden entfernt. Ohne sie ist die Lanthorne nutzlos. Kehrt zu mir zurück, sobald Ihr die fehlenden Glasscheiben gefunden habt.~
+@27=~Leider bestätigen sich unsere Befürchtungen: Eine Glasscheiben wurde entfernt. Ohne sie ist die Lanthorne nutzlos. Kehrt zu mir zurück, sobald Ihr die fehlende Glasscheibe gefunden habt.~
+@28=~Glücklicherweise habt Ihr die verlorene Glasscheibe wiedergefunden. Damit ist die Lanthorne wieder vollständig.~
+@29=~Glücklicherweise habt Ihr die verlorenen Glasscheiben wiedergefunden. Damit ist die Lanthorne wieder vollständig.~
+@30=~Ihr seid wieder da! Hier war es relativ ruhig. Ich denke, die Drow sind zufrieden damit, dass sie unseren Tempel zerstört haben. Sie haben noch keinen weiteren Vorstoß unternommen. Bis jetzt.~ [ELHAN110]
+@31=~Ihr habt die Glasscheibe, die wir brauchen! Damit ist die Lanthorne wieder vollständig.~
+@32=~Ihr habt die Glasscheiben, die wir brauchen! Damit ist die Lanthorne wieder vollständig.~
+@33=~Meine Gelehrten sagen mir, dass Ihr die Glasscheiben noch nicht wiedergefunden habt. Beeilt Euch, die Not der Elfen wird von Tag zu Tag schlimmer.~
+@34=~Meine Gelehrten sagen mir, dass Ihr die Glasscheibe noch nicht wiedergefunden habt. Beeilt Euch, die Not der Elfen wird von Tag zu Tag schlimmer.~
+
+@35=~Sie liegt unter den Straßen, im Gefängnis eines längst verstorbenen Magiers aus Netheril, der seit Jahrhunderten durch ein Opfer gebunden ist. Nur wer ihn erweckt, kann die Glasscheibe befreien.~
+@36=~Inmitten des Trubels einer Menschenstadt, verzehrt von Ehrgeiz und Todesangst, dient sie einem verdrehten Lich. Doch keiner von beiden kennt den Wert des Schatzes, den sie besitzt.~
+@37=~Versteckt inmitten von Frömmigkeit weben die Sklavenherren ihr Netz. Ihre Diener bringen ihnen viele Schmuckstücke, und sie kennen nicht den Wert dieses einen.~
+@38=~Ein alter Feind hält den Schlüssel, doch die Tür liegt unter den Straßen. Das Ungeheuer dort wickelt seine Tentakel unwissend um die Beute.~
+
+@120=~Die Elfenstadt benötigt meine Unterstützung
+
+Ich habe zwar die Rynn-Lanthorne von Bodhi zurückbekommen, aber ohne die Glasscheiben, ist sie nutzlos. Ich muss den Hinweisen der Gelehrten folgen, sie finden und Elhan zurückgeben, wenn ich Suldanesselar erreichen will.~
+@121=~Die Elfenstadt benötigt meine Unterstützung
+
+Ich habe zwar die Rynn-Lanthorne von Bodhi zurückbekommen, aber ohne die Glasscheibe, ist sie nutzlos. Ich muss dem Hinweis der Gelehrten folgen, sie finden und Elhan zurückgeben, wenn ich Suldanesselar erreichen will.~
+@122=~Die Elfenstadt benötigt meine Unterstützung
+
+Ich habe eine Glasscheibe der Rynn-Lanthorne gefunden - Bodhi muss sie hier versteckt haben, als sie das Relikt aus dem Elfentempel stahl.~
+@135=~Die Elfenstadt benötigt meine Unterstützung
+
+„Sie liegt unter den Straßen, im Gefängnis eines längst verstorbenen Magiers aus Netheril, der seit Jahrhunderten durch ein Opfer gebunden ist. Nur wer ihn erweckt, kann die Glasscheibe befreien.“~
+@136=~Die Elfenstadt benötigt meine Unterstützung
+
+„Inmitten des Trubels einer Menschenstadt, verzehrt von Ehrgeiz und Todesangst, dient sie einem verdrehten Lich. Doch keiner von beiden kennt den Wert des Schatzes, den sie besitzt.“~
+
+@137=~Die Elfenstadt benötigt meine Unterstützung
+
+„Versteckt inmitten von Frömmigkeit weben die Sklavenherren ihr Netz. Ihre Diener bringen ihnen viele Schmuckstücke, und sie kennen nicht den Wert dieses einen.“~
+@138=~Die Elfenstadt benötigt meine Unterstützung
+
+„Ein alter Feind hält den Schlüssel, doch die Tür liegt unter den Straßen. Das Ungeheuer dort wickelt seine Tentakel unwissend um die Beute.“~
